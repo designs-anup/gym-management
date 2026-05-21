@@ -2,100 +2,439 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fit app</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Payments & Billing | Fit App</title>
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet"
+    href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <aside>
-            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
-            <ol>
-                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
-                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
-                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
-                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
-                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
-                <li><a href="payments-billing.html" class="active"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
-            </ol>
-            <footer>
-                @2023 fit app. All rights reserved.
-            </footer>
-        </aside>
-        <div class="wrap">
-            <header>
-                <h2>Payments & Billing</h2>
-                <nav>
-                    Admin User
-                    admin@mygym.com
-                    <a href="#"><i class="fas fa-arrow-down"></i></a>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
-                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
-                    </ul>
-                </nav>
-            </header>
-            <main class="trainers-section">
-                <div class="section-title">
-                    <h2>Payments & Billing</h2>
-                    <p>Track payments and manage invoices</p>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            <span>Fit App</span>
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="members.html">
+                    <i class="fas fa-users"></i>
+                    Members
+                </a>
+            </li>
+
+            <li>
+                <a href="trainers.html">
+                    <i class="fas fa-user-tie"></i>
+                    Trainers
+                </a>
+            </li>
+
+            <li>
+                <a href="workout-plans.html">
+                    <i class="fas fa-dumbbell"></i>
+                    Workout Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-plans.html">
+                    <i class="fas fa-id-card"></i>
+                    Membership Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-tracking.html">
+                    <i class="fas fa-chart-line"></i>
+                    Membership Tracking
+                </a>
+            </li>
+
+            <li>
+                <a href="payments-billing.html"
+                   class="active">
+                    <i class="fas fa-wallet"></i>
+                    Payments
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            © 2026 Fit App
+        </div>
+
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1>
+                        Payments & Billing
+                    </h1>
+
+                    <p>
+                        Manage transactions and invoices
+                    </p>
                 </div>
 
-                <ul class="membership-overview-cards">
-                    <li>
-                        Total Revenue
-                        <span>$2900</span>
-                        <i class="fas fa-user-cog"></i>
-                    </li>
-                    <li>
-                        Completed Payments
-                        <span>4</span>
-                        <i class="fas fa-user-cog"></i>
-                    </li>
-                    <li>
-                        Average Transaction
-                        <span>$100</span>
-                        <i class="fas fa-user-cog"></i>
-                    </li>
-                </ul>
+            </div>
 
-                <div class="trainers-table">
-                    <h2>
+            <div class="profile-card">
+
+                <div class="profile-info">
+                    <h4>Admin User</h4>
+                    <small>
+                        admin@mygym.com
+                    </small>
+                </div>
+
+                <img
+                src="https://i.pravatar.cc/100?img=12"
+                alt="profile">
+
+            </div>
+
+        </header>
+
+        <!-- Content -->
+        <main>
+
+            <!-- Stats -->
+            <section
+            class="stats-grid">
+
+                <div
+                class="card stat-card">
+
+                    <div>
+                        <p>
+                            Total Revenue
+                        </p>
+
+                        <h2>
+                            ₹1,25,000
+                        </h2>
+                    </div>
+
+                    <i class=
+                    "fas fa-wallet">
+                    </i>
+
+                </div>
+
+                <div
+                class="card stat-card">
+
+                    <div>
+                        <p>
+                            Pending Payments
+                        </p>
+
+                        <h2>
+                            ₹12,500
+                        </h2>
+                    </div>
+
+                    <i class=
+                    "fas fa-clock">
+                    </i>
+
+                </div>
+
+                <div
+                class="card stat-card">
+
+                    <div>
+                        <p>
+                            Paid Invoices
+                        </p>
+
+                        <h2>
+                            120
+                        </h2>
+                    </div>
+
+                    <i class=
+                    "fas fa-file-invoice-dollar">
+                    </i>
+
+                </div>
+
+            </section>
+
+            <!-- Controls -->
+            <section class="card"
+            style="margin-top:24px;">
+
+                <div
+                class="member-controls">
+
+                    <div
+                    class="search-box">
+
+                        <i class=
+                        "fas fa-search">
+                        </i>
+
+                        <input
+                        type="text"
+                        placeholder=
+                        "Search payments...">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Table -->
+            <section
+            class="card table-card">
+
+                <div class=
+                "table-header">
+
+                    <h3>
                         Payment History
-                        <button>Export</button>
-                    </h2>
+                    </h3>
+
+                    <span>
+                        150 Transactions
+                    </span>
+
+                </div>
+
+                <div
+                class="table-wrapper">
+
                     <table>
+
                         <thead>
+
                             <tr>
                                 <th>Invoice ID</th>
                                 <th>Member</th>
-                                <th>Date</th>
-                                <th>Method</th>
+                                <th>Plan</th>
                                 <th>Amount</th>
+                                <th>Date</th>
                                 <th>Status</th>
-                                <th>Actions</th>
+                                <th>Invoice</th>
                             </tr>
+
                         </thead>
+
                         <tbody>
+
                             <tr>
-                                <td>INV-001</td>
-                                <td>John Smith</td>
-                                <td>2026-01-15</td>
-                                <td>online</td>
-                                <td>$500</td>
-                                <td><span>completed</span></td>
-                                <td><a href="#">View</a></td>
+
+                                <td>
+                                    #INV-1001
+                                </td>
+
+                                <td>
+                                    John Doe
+                                </td>
+
+                                <td>
+                                    Premium
+                                </td>
+
+                                <td>
+                                    ₹2,999
+                                </td>
+
+                                <td>
+                                    20 May 2026
+                                </td>
+
+                                <td>
+
+                                    <span
+                                    class=
+                                    "status active">
+
+                                        Paid
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <button
+                                    class=
+                                    "btn-primary btn-small">
+
+                                        Download
+
+                                    </button>
+
+                                </td>
+
                             </tr>
+
+                            <tr>
+
+                                <td>
+                                    #INV-1002
+                                </td>
+
+                                <td>
+                                    Jane Smith
+                                </td>
+
+                                <td>
+                                    Basic
+                                </td>
+
+                                <td>
+                                    ₹999
+                                </td>
+
+                                <td>
+                                    19 May 2026
+                                </td>
+
+                                <td>
+
+                                    <span
+                                    class=
+                                    "status warning">
+
+                                        Pending
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <button
+                                    class=
+                                    "btn-secondary
+                                    btn-small">
+
+                                        Pending
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    #INV-1003
+                                </td>
+
+                                <td>
+                                    Alex Brown
+                                </td>
+
+                                <td>
+                                    Standard
+                                </td>
+
+                                <td>
+                                    ₹1,999
+                                </td>
+
+                                <td>
+                                    17 May 2026
+                                </td>
+
+                                <td>
+
+                                    <span
+                                    class=
+                                    "status expired">
+
+                                        Failed
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <button
+                                    class=
+                                    "btn-danger
+                                    btn-small">
+
+                                        Retry
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
                         </tbody>
+
                     </table>
+
                 </div>
 
-            </main>
-        </div>
+            </section>
+
+        </main>
+
     </div>
+
 </div>
+
+<script>
+const menuBtn =
+document.getElementById(
+'menuBtn'
+);
+
+const sidebar =
+document.getElementById(
+'sidebar'
+);
+
+menuBtn.addEventListener(
+'click',
+()=>{
+sidebar.classList.toggle(
+'active'
+);
+});
+</script>
+
 </body>
 </html>

@@ -2,171 +2,625 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fit app</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Membership Plans | Fit App</title>
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet"
+    href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <aside>
-            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
-            <ol>
-                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
-                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
-                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
-                <li><a href="membership-plans.html" class="active"><i class="fas fa-id-card"></i> Membership Plans</a></li>
-                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
-                <li><a href="payments-billing.html"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
-            </ol>
-            <footer>
-                @2023 fit app. All rights reserved.
-            </footer>
-        </aside>
-        <div class="wrap">
-            <header>
-                <h2>Membership Plans</h2>
-                <nav>
-                    Admin User
-                    admin@mygym.com
-                    <a href="#"><i class="fas fa-arrow-down"></i></a>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
-                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
-                    </ul>
-                </nav>
-            </header>
-            <main class="trainers-section">
-                <div class="section-title">
-                    <h2>Membership Plans</h2>
-                    <p>Create and manage membership pricing and benefits</p>
-                    <button id="create-membership-plan-btn"><i class="fas fa-plus"></i> Create Membership Plan</button>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            <span>Fit App</span>
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="members.html">
+                    <i class="fas fa-users"></i>
+                    Members
+                </a>
+            </li>
+
+            <li>
+                <a href="trainers.html">
+                    <i class="fas fa-user-tie"></i>
+                    Trainers
+                </a>
+            </li>
+
+            <li>
+                <a href="workout-plans.html">
+                    <i class="fas fa-dumbbell"></i>
+                    Workout Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-plans.html"
+                   class="active">
+                    <i class="fas fa-id-card"></i>
+                    Membership Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="payments-billing.html">
+                    <i class="fas fa-wallet"></i>
+                    Payments
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1>Membership Plans</h1>
+                    <p>
+                        Manage gym subscription plans
+                    </p>
                 </div>
 
-                <div class="trainers-table">
-                    <h3>Plan Comparison</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Feature</th>
-                                <th>Basic Monthly</th>
-                                <th>Standard Quarterly</th>
-                                <th>Premium Annual</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Price</td>
-                                <td>$500</td>
-                                <td>$3000</td>
-                                <td>$9000</td>
-                            </tr>
-                            <tr>
-                                <td>Duration</td>
-                                <td>1 Month</td>
-                                <td>3 Months</td>
-                                <td>12 Months</td>
-                            </tr>
-                            <tr>
-                                <td>Gym Access</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr>
-                                <td>Personal Training</td>
-                                <td>-</td>
-                                <td>1 Session</td>
-                                <td>Ultimate</td>
-                            </tr>
-                            <tr>
-                                <td>Group Classes</td>
-                                <td>-</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr>
-                                <td>Spa & Sauna</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr>
-                                <td>Access to Gym</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr>
-                                <td>Nutrition Counseling</td>
-                                <td>-</td>
-                                <td>Yes</td>
-                                <td>Yes</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                       
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Create Membership Plan</h2>
-                    <form action="create-membership-plan.html">
-                        <div class="form-group">
-                            <label for="plan-name">Plan Name:</label>
-                            <input type="text" id="plan-name" name="plan-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="duration">Duration:</label>
-                            <input type="text" id="duration" name="duration" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="price">Price:</label>
-                            <input type="number" id="price" name="price" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Benefits (one per line):</label>
-                            <textarea id="description" name="description" required></textarea>
-                        </div>                        
-
-                        <button type="submit">Create Membership Plan</button>
-                    </form>
-                </div>
             </div>
 
-            </main>
-        </div>
+            <div class="profile-card">
+
+                <div class="profile-info">
+                    <h4>Admin User</h4>
+                    <small>
+                        admin@mygym.com
+                    </small>
+                </div>
+
+                <img
+                src="https://i.pravatar.cc/100?img=12"
+                alt="profile">
+
+            </div>
+
+        </header>
+
+        <!-- Page Content -->
+        <main>
+
+            <!-- Controls -->
+            <section class="card">
+
+                <div class="member-controls">
+
+                    <div>
+                        <h2>
+                            Available Plans
+                        </h2>
+
+                        <p class="page-subtitle">
+                            Manage pricing and benefits
+                        </p>
+                    </div>
+
+                    <button
+                    class="btn-primary"
+                    id="openPlanModal">
+
+                        <i class="fas fa-plus"></i>
+                        Add Plan
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- Plans -->
+            <section class="plans-grid">
+
+                <!-- Basic -->
+                <div class="card plan-card">
+
+                    <span class=
+                    "plan-badge">
+                        Basic
+                    </span>
+
+                    <h2>
+                        ₹999
+                    </h2>
+
+                    <p class=
+                    "plan-duration">
+                        /month
+                    </p>
+
+                    <ul class=
+                    "plan-features">
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Gym Access
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Locker Facility
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-times">
+                            </i>
+
+                            Personal Trainer
+                        </li>
+
+                    </ul>
+
+                    <div class=
+                    "plan-actions">
+
+                        <a href=
+                        "membership-plan-edit.html"
+                        class=
+                        "btn-primary">
+
+                            Edit
+
+                        </a>
+
+                        <button
+                        class=
+                        "btn-danger">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- Standard -->
+                <div class=
+                "card plan-card featured-plan">
+
+                    <span class=
+                    "plan-badge premium">
+                        Popular
+                    </span>
+
+                    <h2>
+                        ₹1,999
+                    </h2>
+
+                    <p class=
+                    "plan-duration">
+                        /month
+                    </p>
+
+                    <ul class=
+                    "plan-features">
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Full Gym Access
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Personal Trainer
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Diet Plan
+                        </li>
+
+                    </ul>
+
+                    <div class=
+                    "plan-actions">
+
+                        <a href=
+                        "membership-plan-edit.html"
+                        class=
+                        "btn-primary">
+
+                            Edit
+
+                        </a>
+
+                        <button
+                        class=
+                        "btn-danger">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- Premium -->
+                <div class=
+                "card plan-card">
+
+                    <span class=
+                    "plan-badge gold">
+                        Premium
+                    </span>
+
+                    <h2>
+                        ₹2,999
+                    </h2>
+
+                    <p class=
+                    "plan-duration">
+                        /month
+                    </p>
+
+                    <ul class=
+                    "plan-features">
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            VIP Access
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Dedicated Trainer
+                        </li>
+
+                        <li>
+                            <i class=
+                            "fas fa-check">
+                            </i>
+
+                            Diet + Supplements
+                        </li>
+
+                    </ul>
+
+                    <div class=
+                    "plan-actions">
+
+                        <a href=
+                        "membership-plan-edit.html"
+                        class=
+                        "btn-primary">
+
+                            Edit
+
+                        </a>
+
+                        <button
+                        class=
+                        "btn-danger">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
     </div>
+
 </div>
-</body>
+
+<!-- Add Membership Plan Modal -->
+<div class="modal-overlay"
+id="planModal">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>
+                    Add Membership Plan
+                </h2>
+
+                <p>
+                    Create a new
+                    membership package
+                </p>
+            </div>
+
+            <button
+            class="close-modal"
+            id="closePlanModal">
+
+                <i class=
+                "fas fa-times">
+                </i>
+
+            </button>
+
+        </div>
+
+        <form
+        class="member-form">
+
+            <div
+            class="form-grid">
+
+                <div
+                class="input-group">
+
+                    <label>
+                        Plan Name
+                    </label>
+
+                    <input
+                    type="text"
+                    placeholder=
+                    "Premium Plan"
+                    required>
+
+                </div>
+
+                <div
+                class="input-group">
+
+                    <label>
+                        Price
+                    </label>
+
+                    <input
+                    type="number"
+                    placeholder=
+                    "1999"
+                    required>
+
+                </div>
+
+                <div
+                class="input-group">
+
+                    <label>
+                        Duration
+                    </label>
+
+                    <select>
+
+                        <option>
+                            1 Month
+                        </option>
+
+                        <option>
+                            3 Months
+                        </option>
+
+                        <option>
+                            6 Months
+                        </option>
+
+                        <option>
+                            12 Months
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div
+                class="input-group">
+
+                    <label>
+                        Plan Type
+                    </label>
+
+                    <select>
+
+                        <option>
+                            Basic
+                        </option>
+
+                        <option>
+                            Standard
+                        </option>
+
+                        <option>
+                            Premium
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div
+                class=
+                "input-group full-width">
+
+                    <label>
+                        Features
+                    </label>
+
+                    <textarea
+                    rows="5"
+                    placeholder=
+                    "Gym Access&#10;Personal Trainer&#10;Diet Plan">
+                    </textarea>
+
+                </div>
+
+            </div>
+
+            <div
+            class=
+            "form-actions">
+
+                <button
+                type="button"
+                class=
+                "btn-secondary"
+                id=
+                "cancelPlan">
+
+                    Cancel
+
+                </button>
+
+                <button
+                type="submit"
+                class=
+                "btn-primary">
+
+                    Save Plan
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
 <script>
-// Get the modal
-var modal = document.getElementById("myModal");
+const menuBtn =
+document.getElementById(
+'menuBtn'
+);
 
-// Get the button that opens the modal
-var btn = document.getElementById("create-membership-plan-btn");
+const sidebar =
+document.getElementById(
+'sidebar'
+);
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+menuBtn.addEventListener(
+'click',
+()=>{
+sidebar.classList.toggle(
+'active'
+);
+});
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
+/* Plan Modal */
+
+const planModal =
+document.getElementById(
+'planModal'
+);
+
+const openPlanModal =
+document.getElementById(
+'openPlanModal'
+);
+
+const closePlanModal =
+document.getElementById(
+'closePlanModal'
+);
+
+const cancelPlan =
+document.getElementById(
+'cancelPlan'
+);
+
+openPlanModal
+.addEventListener(
+'click',
+()=>{
+planModal
+.classList.add(
+'active'
+);
+});
+
+function closeModal(){
+planModal
+.classList.remove(
+'active'
+);
 }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+closePlanModal
+.addEventListener(
+'click',
+closeModal
+);
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+cancelPlan
+.addEventListener(
+'click',
+closeModal
+);
+
+planModal
+.addEventListener(
+'click',
+(e)=>{
+if(
+e.target ===
+planModal
+){
+closeModal();
 }
+});
 </script>
+
+</body>
 </html>

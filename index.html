@@ -1,196 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fit app</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Fit App Dashboard</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <aside>
-            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
-            <ol>
-                <li><a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
-                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
-                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
-                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
-                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
-                <li><a href="payments-billing.html"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
-            </ol>
-            <footer>
-                @2023 fit app. All rights reserved.
-            </footer>
-        </aside>
-        <div class="wrap">
-            <header>
-                <h2>Dashboard</h2>
-                <nav>
-                    Admin User
-                    admin@mygym.com
-                    <a href="#"><i class="fas fa-arrow-down"></i></a>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
-                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
-                    </ul>
-                </nav>
-            </header>
-            <main>
-                    <div class="card">
-                        <h3>Total Members</h3>
-                        <p>150</p>
-                        <i class="fas fa-users fa-2x"></i>
-                    </div>
-                    <div class="card">
-                        <h3>Total Trainers</h3>
-                        <p>10</p>
-                        <i class="fas fa-user-tie fa-2x"></i>
-                    </div>
-                    <div class="card">
-                        <h3>Active Memberships</h3>
-                        <p>120</p>
-                        <i class="fas fa-id-card fa-2x"></i>
-                    </div>
-                    <div class="card">
-                        <h3>Monthly Revenue</h3>
-                        <p>$5000</p>
-                        <i class="fas fa-file-invoice fa-2x"></i>
-                    </div>
 
-        
-                    <!-- The Div where the chart will appear -->
-                    <div id="static_chart_div" style="width: 100%; max-width: 900px; height: 500px; border: 1px solid #ccc;"></div>
+<div class="container">
 
-                    <div id="static_attendance_div">
-                        <h2>Weekly Gym Attendance</h2>
-                        <canvas id="attendanceChart"></canvas>
-                    </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
 
-                    <div class="dashboard-card">
-                        <h2>
-                            Recent members
-                            <button>View All</button>
-                        </h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Membership Plan</th>
-                                    <th>Join Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>John Doe</td>
-                                    <td>Premium</td>
-                                    <td>2026-01-15</td>
-                                    <td>Active</td>
-                                </tr>
-                                <tr>
-                                    <td>Jane Smith</td>
-                                    <td>Basic</td>
-                                    <td>2026-02-10</td>
-                                    <td>Active</td>
-                                </tr>
-                                <tr>
-                                    <td>Emily Johnson</td>
-                                    <td>Standard</td>
-                                    <td>2026-03-05</td>
-                                    <td>Active</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </main>
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            <span>Fit App</span>
         </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="index.html" class="active">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="members.html">
+                    <i class="fas fa-users"></i>
+                    Members
+                </a>
+            </li>
+
+            <li>
+                <a href="trainers.html">
+                    <i class="fas fa-user-tie"></i>
+                    Trainers
+                </a>
+            </li>
+
+            <li>
+                <a href="workout-plans.html">
+                    <i class="fas fa-dumbbell"></i>
+                    Workout Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-plans.html">
+                    <i class="fas fa-id-card"></i>
+                    Membership Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-tracking.html">
+                    <i class="fas fa-chart-line"></i>
+                    Membership Tracking
+                </a>
+            </li>
+
+            <li>
+                <a href="payments-billing.html">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Payments & Billing
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            <p>© 2026 Fit App</p>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, Admin User 👋</p>
+                </div>
+
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-info">
+                    <h4>Admin User</h4>
+                    <small>admin@mygym.com</small>
+                </div>
+
+                <img
+                    src="https://i.pravatar.cc/100?img=12"
+                    alt="profile"
+                >
+
+            </div>
+
+        </header>
+
+        <!-- Dashboard -->
+        <main>
+
+            <!-- Stats -->
+            <section class="stats-grid">
+
+                <div class="card stat-card">
+                    <div>
+                        <p>Total Members</p>
+                        <h2>150</h2>
+                    </div>
+                    <i class="fas fa-users"></i>
+                </div>
+
+                <div class="card stat-card">
+                    <div>
+                        <p>Total Trainers</p>
+                        <h2>10</h2>
+                    </div>
+                    <i class="fas fa-user-tie"></i>
+                </div>
+
+                <div class="card stat-card">
+                    <div>
+                        <p>Active Memberships</p>
+                        <h2>120</h2>
+                    </div>
+                    <i class="fas fa-id-card"></i>
+                </div>
+
+                <div class="card stat-card">
+                    <div>
+                        <p>Monthly Revenue</p>
+                        <h2>$5000</h2>
+                    </div>
+                    <i class="fas fa-wallet"></i>
+                </div>
+
+            </section>
+
+            <!-- Charts -->
+            <section class="chart-grid">
+
+                <div class="card chart-card">
+
+                    <div class="card-header">
+                        <h3>Member Registration</h3>
+                    </div>
+
+                    <div id="static_chart_div"></div>
+
+                </div>
+
+                <div class="card chart-card">
+
+                    <div class="card-header">
+                        <h3>Weekly Attendance</h3>
+                    </div>
+
+                    <canvas id="attendanceChart"></canvas>
+
+                </div>
+
+            </section>
+
+            <!-- Recent Members -->
+            <section class="card table-card">
+
+                <div class="table-header">
+
+                    <h3>Recent Members</h3>
+
+                    <button class="btn-primary">
+                        View All
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Membership Plan</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>John Doe</td>
+                                <td>Premium</td>
+                                <td>2026-01-15</td>
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>Basic</td>
+                                <td>2026-02-10</td>
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Emily Johnson</td>
+                                <td>Standard</td>
+                                <td>2026-03-05</td>
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
     </div>
 
+</div>
 
-    <!-- 1. Load the AJAX API -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+<!-- Google Charts -->
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 
-        // **********  Member Registration Line Chart **********/
-        // 1. Load the Visualization API and the corechart package.
-        google.charts.load('current', {'packages':['corechart']});
+<script>
+google.charts.load('current', {
+    packages:['corechart']
+});
 
-        // 2. Set a callback to run when the API is loaded.
-        google.charts.setOnLoadCallback(drawMemberChart);
+google.charts.setOnLoadCallback(drawMemberChart);
 
-        function drawMemberChart() {
-            // 3. Define the static data table
-            var data = google.visualization.arrayToDataTable([
-                ['Month', 'New Members', 'Target'],
-                ['Jan',  45,  40],
-                ['Feb',  52,  40],
-                ['Mar',  38,  45],
-                ['Apr',  65,  45],
-                ['May',  48,  50],
-                ['Jun',  72,  50]
-            ]);
+function drawMemberChart() {
 
-            // 4. Set chart options (colors, titles, etc.)
-            var options = {
-                title: 'Monthly New Member Registration',
-                curveType: 'function', // Makes the line smooth
-                legend: { position: 'bottom' },
-                colors: ['#1b9e77', '#d95f02'], // Green for members, Orange for target
-                pointSize: 5,
-                vAxis: {
-                    title: 'Number of People',
-                    viewWindow: { min: 0 }
-                },
-                hAxis: {
-                    title: '2026 Timeline'
-                },
-                chartArea: { width: '80%', height: '70%' }
-            };
+    var data =
+    google.visualization.arrayToDataTable([
+        ['Month', 'New Members', 'Target'],
+        ['Jan',45,40],
+        ['Feb',52,40],
+        ['Mar',38,45],
+        ['Apr',65,45],
+        ['May',48,50],
+        ['Jun',72,50]
+    ]);
 
-            // 5. Instantiate and draw the chart
-            var chart = new google.visualization.LineChart(document.getElementById('static_chart_div'));
-            chart.draw(data, options);
+    var options = {
+        title: '',
+        curveType: 'function',
+        legend: { position: 'bottom' },
+        colors: ['#7c3aed','#06b6d4'],
+        pointSize: 5,
+        backgroundColor: 'transparent',
+        chartArea: {
+            width:'85%',
+            height:'70%'
         }
+    };
 
-        document.querySelector('header nav a').addEventListener('click', function(event) {
-            event.preventDefault();
-            var dropdown = this.nextElementSibling;
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        });
-    </script>
+    var chart =
+    new google.visualization.LineChart(
+        document.getElementById(
+            'static_chart_div'
+        )
+    );
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('attendanceChart').getContext('2d');
-        const attendanceChart = new Chart(ctx, {
-            type: 'line', 
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Morning Session',
-                    data: [15, 12, 18, 10, 14, 25, 20],
-                    borderColor: 'rgb(26, 115, 232)',
-                    tension: 0.3,
-                    fill: false
-                },
-                {
-                    label: 'Evening Session',
-                    data: [22, 28, 20, 25, 30, 15, 10],
-                    borderColor: 'rgb(217, 48, 37)',
-                    tension: 0.3,
-                    fill: false
-                }]
+    chart.draw(data, options);
+}
+</script>
+
+<!-- Chart JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx =
+document.getElementById(
+'attendanceChart'
+).getContext('2d');
+
+new Chart(ctx,{
+    type:'line',
+
+    data:{
+        labels:[
+            'Mon',
+            'Tue',
+            'Wed',
+            'Thu',
+            'Fri',
+            'Sat',
+            'Sun'
+        ],
+
+        datasets:[
+            {
+                label:'Morning',
+                data:[
+                    15,12,18,10,14,25,20
+                ],
+                borderColor:'#7c3aed',
+                tension:.4
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' }
-                }
+            {
+                label:'Evening',
+                data:[
+                    22,28,20,25,30,15,10
+                ],
+                borderColor:'#06b6d4',
+                tension:.4
             }
-        });
-    </script>
+        ]
+    },
+
+    options:{
+        responsive:true,
+        maintainAspectRatio:false,
+
+        plugins:{
+            legend:{
+                position:'top'
+            }
+        }
+    }
+});
+</script>
+
+<!-- Sidebar Toggle -->
+<script>
+const menuBtn =
+document.getElementById(
+'menuBtn'
+);
+
+const sidebar =
+document.getElementById(
+'sidebar'
+);
+
+menuBtn.addEventListener(
+'click',
+()=>{
+sidebar.classList.toggle(
+'active'
+);
+});
+</script>
+
 </body>
 </html>

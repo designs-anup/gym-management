@@ -2,82 +2,302 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fit app</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Trainer Details | Fit App</title>
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet"
+    href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <aside>
-            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
-            <ol>
-                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="members.html" class="active"><i class="fas fa-users"></i> Members</a></li>
-                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
-                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
-                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
-                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
-                <li><a href="payments-billing.html"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
-            </ol>
-            <footer>
-                @2023 fit app. All rights reserved.
-            </footer>
-        </aside>
-        <div class="wrap">
-            <header>
-                <h2>Members</h2>
-                <nav>
-                    Admin User
-                    admin@mygym.com
-                    <a href="#"><i class="fas fa-arrow-down"></i></a>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
-                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
-                    </ul>
-                </nav>
-            </header>
-            <main class="members-section">
-                <div class="section-title">
-                    <a href="trainers.html"><i class="fas fa-arrow-left"></i> Back to Trainers</a>
-                    <h2>Trainer Details</h2>
-                    <p>View trainer information and specialties</p>
-                    <button onclick="location.href='trainer-edit.html'"><i class="fas fa-edit"></i> Edit Trainer</button>
-                </div>
-                
-                <div class="member-details">
-                    <div style="width: 100px; height: 100px; background-color: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                        <i class="fas fa-user fa-3x"></i>
-                    </div>
-                    <h3>John Doe</h3>
-                    <span class="status active">Active</span>
-                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> john.doe@example.com</p>
-                    <p><i class="fas fa-phone"></i> <strong>Phone:</strong> 123-456-7890</p>
-                    <p><i class="fas fa-calendar"></i> <strong>Hire Date:</strong> January 1, 2023</p>
-                    <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 123 Main St, City, State 12345</p>
-                </div>
 
-                <div class="personal-information">
-                    <h3>Personal Information</h3>
-                    <p><i class="fas fa-birthday-cake"></i> <strong>Birthday:</strong> January 1, 1990</p>
-                    <p><i class="fas fa-venus-mars"></i> <strong>Gender:</strong> Male</p>
-                    <p><i class="fas fa-ruler-vertical"></i> <strong>Height:</strong> 6'0"</p>
-                    <p><i class="fas fa-weight"></i> <strong>Weight:</strong> 180 lbs</p>
-                </div>
+<div class="container">
 
-                <div class="specialty-details">
-                    <h3>Specialties</h3>
-                    <ul>
-                        <li><span class="specialty-type">Strength Training</span></li>
-                        <li><span class="specialty-type">Yoga</span></li>
-                        <li><span class="specialty-type">Cardio</span></li>
-                        <li><span class="specialty-type">Boxing</span></li>
-                    </ul>
-                </div>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
 
-            </main>
+        <div class="logo">
+            <i class="fas fa-dumbbell"></i>
+            <span>Fit App</span>
         </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="members.html">
+                    <i class="fas fa-users"></i>
+                    Members
+                </a>
+            </li>
+
+            <li>
+                <a href="trainers.html"
+                   class="active">
+                    <i class="fas fa-user-tie"></i>
+                    Trainers
+                </a>
+            </li>
+
+            <li>
+                <a href="workout-plans.html">
+                    <i class="fas fa-dumbbell"></i>
+                    Workout Plans
+                </a>
+            </li>
+
+            <li>
+                <a href="membership-plans.html">
+                    <i class="fas fa-id-card"></i>
+                    Membership Plans
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <div>
+                    <h1>Trainer Profile</h1>
+                    <p>
+                        View trainer details
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-info">
+                    <h4>Admin User</h4>
+                    <small>
+                        admin@mygym.com
+                    </small>
+                </div>
+
+                <img
+                src="https://i.pravatar.cc/100?img=12"
+                alt="profile">
+
+            </div>
+
+        </header>
+
+        <main>
+
+            <div class="member-view-grid">
+
+                <!-- Trainer Profile -->
+                <section class="card profile-view-card">
+
+                    <img
+                    src=
+                    "https://i.pravatar.cc/150?img=30"
+                    alt="trainer"
+                    class=
+                    "profile-member-image">
+
+                    <h2>
+                        Michael Lee
+                    </h2>
+
+                    <p class="member-email">
+                        mike@gym.com
+                    </p>
+
+                    <span
+                    class="status active">
+                        Active Trainer
+                    </span>
+
+                    <div class="member-plan">
+                        <span class="badge">
+                            Strength Training
+                        </span>
+                    </div>
+
+                    <div class="profile-actions">
+
+                        <a href=
+                        "trainer-edit.html"
+                        class=
+                        "btn-primary">
+
+                            Edit Trainer
+
+                        </a>
+
+                        <button
+                        class=
+                        "btn-danger">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+                <!-- Trainer Details -->
+                <section class="card member-details-card">
+
+                    <div class="details-header">
+                        <h2>
+                            Trainer Information
+                        </h2>
+                    </div>
+
+                    <div class="details-grid">
+
+                        <div class="detail-item">
+                            <label>
+                                Full Name
+                            </label>
+
+                            <p>
+                                Michael Lee
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Phone
+                            </label>
+
+                            <p>
+                                +91 9876543210
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Email
+                            </label>
+
+                            <p>
+                                mike@gym.com
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Gender
+                            </label>
+
+                            <p>
+                                Male
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Experience
+                            </label>
+
+                            <p>
+                                5 Years
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Salary
+                            </label>
+
+                            <p>
+                                ₹50,000 / month
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Availability
+                            </label>
+
+                            <p>
+                                Full Time
+                            </p>
+                        </div>
+
+                        <div class="detail-item">
+                            <label>
+                                Assigned Members
+                            </label>
+
+                            <p>
+                                48 Members
+                            </p>
+                        </div>
+
+                        <div class=
+                        "detail-item full-width">
+
+                            <label>
+                                Address
+                            </label>
+
+                            <p>
+                                Bhubaneswar,
+                                Odisha, India
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
     </div>
+
+</div>
+
+<script>
+const menuBtn =
+document.getElementById(
+'menuBtn'
+);
+
+const sidebar =
+document.getElementById(
+'sidebar'
+);
+
+menuBtn.addEventListener(
+'click',
+()=>{
+sidebar.classList.toggle(
+'active'
+);
+});
+</script>
+
 </body>
 </html>

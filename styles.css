@@ -1,0 +1,477 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+}
+.container {
+    display: flex;
+    height: 100vh;
+}
+aside {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+aside h1 {
+    margin-top: 0;
+}
+aside ol {
+    padding-left: 5px;
+}
+aside ol li {
+    margin-bottom: 10px;
+    list-style: none;
+}
+aside ol li a {
+    color: #fff;
+    text-decoration: none;
+}
+aside ol li a:hover {
+    text-decoration: underline;
+}
+aside ol li a.active{
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+aside footer {
+    margin-top: auto;
+    font-size: 12px;
+    text-align: center;
+}
+.wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+header {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 20px;
+}
+header nav {
+    display: flex;
+    align-items: center;
+}
+header nav a {
+    color: #333;
+    text-decoration: none;
+    margin-left: 10px;
+}
+header nav a:hover {
+    text-decoration: underline;
+}
+header nav i {
+    margin-left: 10px;
+    cursor: pointer;
+}
+header nav ul {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 45px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    list-style: none;
+    padding: 10px 0;
+    width: 150px;
+    text-align: right;
+}
+header nav ul li {
+    padding: 10px 20px;
+}
+header nav ul li a {
+    color: #333;
+    text-decoration: none;
+}
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+main {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+.card {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto;
+    align-items: center;
+}
+.card h3 {
+    margin-top: 0;
+    grid-column: 1 / -1;
+}
+.card p {
+    font-size: 1.5em;
+    margin: 10px 0;
+    font-weight: bold;
+}
+.card i {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 10px;
+    text-align: end;
+}
+.dashboard-card {
+    grid-column: 1 / -1;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.dashboard-card h2 {
+    margin-top: 0;
+}
+.dashboard-card button {
+    background-color: #1b9e77;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+.dashboard-card button:hover {
+    background-color: #159e77;
+}
+.dashboard-card table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+}
+.dashboard-card table th, .dashboard-card table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.dashboard-card table th {
+    background-color: #f2f2f2;
+}
+
+/* Graph Chart section */
+
+#static_chart_div {
+    margin-top: 20px;
+    grid-column: 1 / -1;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+#static_attendance_div{
+    margin-top: 20px;
+    grid-column: 1/ -1;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.members-section, .trainers-section{
+    display: block
+}
+
+/* section-title */
+.section-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.section-title h2 {
+    margin: 0;
+}
+.section-title p {
+    display: block;
+    font-size: 0.8em;
+    color: #666;
+}
+.section-title button {
+    background-color: #1b9e77;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.section-title button:hover {
+    background-color: #159e77;
+}
+
+.members-table, .trainers-table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.members-table th, .members-table td, 
+.trainers-table th, .trainers-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.members-table th,
+.trainers-table th {
+    background-color: #f2f2f2;
+}
+
+.members-table tbody tr:hover,
+.trainers-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.table-controls input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+    font-size: large;
+}
+.table-controls select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: large;
+}
+
+.members-table .table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.members-table .table th, .members-table .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.members-table .table th {
+    background-color: #f2f2f2;
+}
+
+/* Member View and Edit Page */
+.member-details {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.member-details h2 {
+    margin-top: 0;
+}
+.member-details p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+.member-details .status {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.member-details .status.active {
+    background-color: #1b9e77;
+    color: #fff;
+}
+.member-details .status.inactive {
+    background-color: #e74c3c;
+    color: #fff;
+}
+.member-details .status.suspended {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.personal-information{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.personal-information h3 {
+    margin-top: 0;
+}
+.personal-information p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.health-records{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.health-records h3 {
+    margin-top: 0;
+}
+.health-records p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.membership-details{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.membership-details h3 {
+    margin-top: 0;
+}
+.membership-details p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.session-history{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.session-history h3 {
+    margin-top: 0;
+}
+.session-history p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.edit-member-form, 
+.add-member-form, 
+.add-trainer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.edit-member-form label, .add-member-form label {
+    font-weight: bold;
+}
+.edit-member-form input[type="text"],
+.edit-member-form input[type="email"],
+.edit-member-form input[type="tel"],
+.edit-member-form input[type="date"],
+.edit-member-form select,
+.add-member-form input[type="text"],
+.add-member-form input[type="email"],
+.add-member-form input[type="tel"],
+.add-member-form input[type="date"],
+.add-member-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+.edit-member-form button, .add-member-form button {
+    background-color: #1b9e77;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+.edit-member-form button:hover, .add-member-form button:hover {
+    background-color: #159e77;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+.button-group button {
+    background-color: #1b9e77;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.button-group button:hover {
+    background-color: #159e77;
+}
+
+.specialty-type{
+    background-color: aquamarine;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.specialty-details{
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 400px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}

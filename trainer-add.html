@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fit app</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
+            <ol>
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li><a href="trainers.html" class="active"><i class="fas fa-user-tie"></i> Trainers</a></li>
+                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
+                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
+                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
+                <li><a href="payments-billing.html"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
+            </ol>
+            <footer>
+                @2023 fit app. All rights reserved.
+            </footer>
+        </aside>
+        <div class="wrap">
+            <header>
+                <h2>Trainers</h2>
+                <nav>
+                    Admin User
+                    admin@mygym.com
+                    <a href="#"><i class="fas fa-arrow-down"></i></a>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
+                    </ul>
+                </nav>
+            </header>
+            <main class="trainers-section">
+                <div class="section-title">
+                    <a href="trainers.html"><i class="fas fa-arrow-left"></i> Back to Trainers</a>
+                    <h2>Add New Trainer</h2>
+                    <p>Fill in trainer information</p>
+                </div>
+
+                <form class="add-trainer-form">
+
+                <div class="personal-information">
+                    <h3>Personal Information</h3>
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="name" name="name" value="">
+                    </div>                    
+                    <div class="form-group">
+                        <label for="photo"><i class="fas fa-camera"></i> Photo</label>
+                        <input type="file" id="photo" name="photo">
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="email" name="email" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" id="phone" name="phone" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date" id="dob" name="dob" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="height"><i class="fas fa-ruler-vertical"></i> Height</label>
+                        <input type="text" id="height" name="height" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="weight"><i class="fas fa-weight"></i> Weight</label>
+                        <input type="text" id="weight" name="weight" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <textarea name="address" id="address"></textarea>
+                    </div>
+                </div>
+                
+                <div class="specialty-details">
+                    <h3>Specialty Selection</h3>
+                    <div class="form-group">
+                            <input type="checkbox" id="strength-training" name="specialties[]" value="strength-training">
+                            <label for="strength-training">Strength Training</label>
+                            <input type="checkbox" id="cross-fit" name="specialties[]" value="cross-fit">
+                            <label for="cross-fit">Cross-Fit</label>
+                            <input type="checkbox" id="yoga" name="specialties[]" value="yoga">
+                            <label for="yoga">Yoga</label>
+                            <input type="checkbox" id="cardio" name="specialties[]" value="cardio">
+                            <label for="cardio">Cardio</label>
+                            <input type="checkbox" id="nutrition" name="specialties[]" value="nutrition">
+                            <label for="nutrition">Nutrition</label>
+                            <input type="checkbox" id="boxing" name="specialties[]" value="boxing">
+                            <label for="boxing">Boxing</label>
+                            <input type="checkbox" id="stretching" name="specialties[]" value="stretching">
+                            <label for="stretching">Stretching</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="location.href='trainers.html'"><i class="fas fa-times"></i> Cancel</button>
+                    <button type="submit"><i class="fas fa-save"></i> Add Trainer</button>
+                </div>
+                
+                </form>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

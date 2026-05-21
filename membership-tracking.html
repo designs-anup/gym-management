@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fit app</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
+            <ol>
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
+                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
+                <li><a href="membership-tracking.html" class="active"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
+                <li><a href="payments-billing.html"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
+            </ol>
+            <footer>
+                @2023 fit app. All rights reserved.
+            </footer>
+        </aside>
+        <div class="wrap">
+            <header>
+                <h2>Membership Tracking</h2>
+                <nav>
+                    Admin User
+                    admin@mygym.com
+                    <a href="#"><i class="fas fa-arrow-down"></i></a>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
+                    </ul>
+                </nav>
+            </header>
+            <main class="trainers-section">
+                <div class="section-title">
+                    <h2>Membership Tracking</h2>
+                    <p>Monitor active, expiring, and expired memberships</p>
+                </div>
+
+                <ul class="membership-overview-cards">
+                    <li>
+                        Active Memberships
+                        <span>4</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                    <li>
+                        Expiring Soon (30 days)
+                        <span>0</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                    <li>
+                        Expired Memberships
+                        <span>1</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                </ul>
+
+                <div class="trainers-table">
+                    <h2>
+                        All Active Memberships
+                        <button>View All</button>
+                    </h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Start Date</th>
+                                <th>Expiry Date</th>
+                                <th>Days Left</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>Basic Monthly</td>
+                                <td>2026-01-15</td>
+                                <td>2026-02-10</td>
+                                <td><span>-5 days</span></td>
+                                <td><a href="#">Renew</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="trainers-table">
+                    <h2>
+                        Expired Memberships
+                    </h2>
+                    <ul>
+                        <li><div style="width: 50px; height: 50px; background-color: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="fas fa-user" style="font-size: large;"></i></div></li>
+                        <li>Mike Davis <span>Expired on 1/10/2025</span></li>
+                        <li><button>Renew Now</button></li>
+                    </ul>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</div>
+</body>
+</html>

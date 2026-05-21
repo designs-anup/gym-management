@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fit app</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <h1><i class="fas fa-dumbbell"></i> fit app</h1>
+            <ol>
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+                <li><a href="workout-plans.html"><i class="fas fa-dumbbell"></i> Workout Plans</a></li>
+                <li><a href="membership-plans.html"><i class="fas fa-id-card"></i> Membership Plans</a></li>
+                <li><a href="membership-tracking.html"><i class="fas fa-chart-line"></i> Membership Tracking</a></li>
+                <li><a href="payments-billing.html" class="active"><i class="fas fa-file-invoice"></i> Payments & Billing</a></li>
+            </ol>
+            <footer>
+                @2023 fit app. All rights reserved.
+            </footer>
+        </aside>
+        <div class="wrap">
+            <header>
+                <h2>Payments & Billing</h2>
+                <nav>
+                    Admin User
+                    admin@mygym.com
+                    <a href="#"><i class="fas fa-arrow-down"></i></a>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+                        <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li> 
+                    </ul>
+                </nav>
+            </header>
+            <main class="trainers-section">
+                <div class="section-title">
+                    <h2>Payments & Billing</h2>
+                    <p>Track payments and manage invoices</p>
+                </div>
+
+                <ul class="membership-overview-cards">
+                    <li>
+                        Total Revenue
+                        <span>$2900</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                    <li>
+                        Completed Payments
+                        <span>4</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                    <li>
+                        Average Transaction
+                        <span>$100</span>
+                        <i class="fas fa-user-cog"></i>
+                    </li>
+                </ul>
+
+                <div class="trainers-table">
+                    <h2>
+                        Payment History
+                        <button>Export</button>
+                    </h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Member</th>
+                                <th>Date</th>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INV-001</td>
+                                <td>John Smith</td>
+                                <td>2026-01-15</td>
+                                <td>online</td>
+                                <td>$500</td>
+                                <td><span>completed</span></td>
+                                <td><a href="#">View</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</div>
+</body>
+</html>

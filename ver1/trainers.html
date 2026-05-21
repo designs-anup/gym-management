@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trainers - Gym Management</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>🏋 GymPro</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+      <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li class="active"><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+      <li><a href="workouts.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+      <li><a href="billing.html"><i class="fas fa-money-bill-wave"></i> Billing</a></li>
+      <li><a href="equipment.html"><i class="fas fa-tools"></i> Equipment</a></li>
+      <li><a href="classes.html"><i class="fas fa-running"></i> Classes</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1>Trainer Management</h1>
+
+      <div class="profile">
+        <i class="fas fa-user-circle"></i>
+        <span>Admin</span>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-icon blue">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="card-info">
+          <h3>15</h3>
+          <p>Total Trainers</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">
+          <i class="fas fa-dumbbell"></i>
+        </div>
+        <div class="card-info">
+          <h3>10</h3>
+          <p>Active Trainers</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon orange">
+          <i class="fas fa-running"></i>
+        </div>
+        <div class="card-info">
+          <h3>8</h3>
+          <p>Classes Running</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Action Bar -->
+    <section class="page-actions">
+
+      <button class="btn add-btn" onclick="openModal()">
+        <i class="fas fa-user-plus"></i> Add Trainer
+      </button>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          id="searchInput"
+          placeholder="Search trainer..."
+          onkeyup="searchTrainer()"
+        >
+      </div>
+
+    </section>
+
+    <!-- Trainer Table -->
+    <section class="table-card">
+
+      <div class="table-header">
+        <h2>Trainer List</h2>
+      </div>
+
+      <table id="trainerTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Specialization</th>
+            <th>Experience</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>#T101</td>
+            <td>John Smith</td>
+            <td>Strength Training</td>
+            <td>5 Years</td>
+            <td>9876543201</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#T102</td>
+            <td>Riya Sharma</td>
+            <td>Yoga Trainer</td>
+            <td>3 Years</td>
+            <td>9876543202</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#T103</td>
+            <td>David Kumar</td>
+            <td>CrossFit Coach</td>
+            <td>6 Years</td>
+            <td>9876543203</td>
+            <td><span class="status inactive">Inactive</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+  <!-- Add Trainer Modal -->
+  <div class="modal" id="trainerModal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Add Trainer</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+
+      <form class="member-form">
+
+        <div class="form-group">
+          <label>Trainer Name</label>
+          <input type="text" placeholder="Enter trainer name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Specialization</label>
+          <input type="text" placeholder="e.g Yoga, Cardio" required>
+        </div>
+
+        <div class="form-group">
+          <label>Experience</label>
+          <input type="text" placeholder="Enter experience" required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" placeholder="Enter phone number" required>
+        </div>
+
+        <button type="submit" class="btn save-btn">
+          Save Trainer
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function openModal() {
+      document.getElementById("trainerModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("trainerModal").style.display = "none";
+    }
+
+    function searchTrainer() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let rows = document.querySelectorAll("#trainerTable tbody tr");
+
+      rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+
+</body>
+</html>

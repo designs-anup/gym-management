@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Classes - Gym Management</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>🏋 GymPro</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+      <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+      <li><a href="workouts.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+      <li><a href="billing.html"><i class="fas fa-money-bill-wave"></i> Billing</a></li>
+      <li><a href="equipment.html"><i class="fas fa-tools"></i> Equipment</a></li>
+      <li class="active"><a href="classes.html"><i class="fas fa-running"></i> Classes</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1>Class Management</h1>
+
+      <div class="profile">
+        <i class="fas fa-user-circle"></i>
+        <span>Admin</span>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-icon blue">
+          <i class="fas fa-running"></i>
+        </div>
+        <div class="card-info">
+          <h3>18</h3>
+          <p>Total Classes</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="card-info">
+          <h3>220</h3>
+          <p>Active Participants</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon orange">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="card-info">
+          <h3>8</h3>
+          <p>Today's Classes</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Action Bar -->
+    <section class="page-actions">
+
+      <button class="btn add-btn" onclick="openModal()">
+        <i class="fas fa-plus-circle"></i> Add Class
+      </button>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          id="searchInput"
+          placeholder="Search class..."
+          onkeyup="searchClass()"
+        >
+      </div>
+
+    </section>
+
+    <!-- Classes Table -->
+    <section class="table-card">
+
+      <div class="table-header">
+        <h2>Gym Classes Schedule</h2>
+      </div>
+
+      <table id="classTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Class Name</th>
+            <th>Trainer</th>
+            <th>Time</th>
+            <th>Duration</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>#CL101</td>
+            <td>Yoga</td>
+            <td>Riya Sharma</td>
+            <td>07:00 AM</td>
+            <td>45 Minutes</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#CL102</td>
+            <td>Zumba</td>
+            <td>Priya Fitness</td>
+            <td>09:00 AM</td>
+            <td>60 Minutes</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#CL103</td>
+            <td>CrossFit</td>
+            <td>David Kumar</td>
+            <td>06:00 PM</td>
+            <td>50 Minutes</td>
+            <td><span class="status inactive">Inactive</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+  <!-- Add Class Modal -->
+  <div class="modal" id="classModal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Add Gym Class</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+
+      <form class="member-form">
+
+        <div class="form-group">
+          <label>Class Name</label>
+          <input type="text" placeholder="Enter class name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Trainer Name</label>
+          <input type="text" placeholder="Enter trainer name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" required>
+        </div>
+
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="text" placeholder="e.g. 45 Minutes" required>
+        </div>
+
+        <button type="submit" class="btn save-btn">
+          Save Class
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function openModal() {
+      document.getElementById("classModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("classModal").style.display = "none";
+    }
+
+    function searchClass() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let rows = document.querySelectorAll("#classTable tbody tr");
+
+      rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+
+</body>
+</html>

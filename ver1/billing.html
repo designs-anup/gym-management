@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Billing - Gym Management</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>🏋 GymPro</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+      <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+      <li><a href="workouts.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+      <li class="active"><a href="billing.html"><i class="fas fa-money-bill-wave"></i> Billing</a></li>
+      <li><a href="equipment.html"><i class="fas fa-tools"></i> Equipment</a></li>
+      <li><a href="classes.html"><i class="fas fa-running"></i> Classes</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1>Billing & Payments</h1>
+
+      <div class="profile">
+        <i class="fas fa-user-circle"></i>
+        <span>Admin</span>
+      </div>
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-icon green">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div class="card-info">
+          <h3>₹1,20,000</h3>
+          <p>Total Revenue</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon blue">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div class="card-info">
+          <h3>85</h3>
+          <p>Paid Members</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon red">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="card-info">
+          <h3>12</h3>
+          <p>Pending Payments</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Action Bar -->
+    <section class="page-actions">
+
+      <button class="btn add-btn" onclick="openModal()">
+        <i class="fas fa-plus-circle"></i> Add Payment
+      </button>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          id="searchInput"
+          placeholder="Search payment..."
+          onkeyup="searchBilling()"
+        >
+      </div>
+
+    </section>
+
+    <!-- Billing Table -->
+    <section class="table-card">
+
+      <div class="table-header">
+        <h2>Payment History</h2>
+      </div>
+
+      <table id="billingTable">
+        <thead>
+          <tr>
+            <th>Invoice ID</th>
+            <th>Member Name</th>
+            <th>Plan</th>
+            <th>Amount</th>
+            <th>Payment Mode</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Invoice</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>#INV101</td>
+            <td>Rahul Sharma</td>
+            <td>Premium</td>
+            <td>₹4,500</td>
+            <td>UPI</td>
+            <td><span class="status active">Paid</span></td>
+            <td>21-05-2026</td>
+            <td>
+                <button class="btn save-btn"
+                  onclick="generateInvoice(
+                  'INV101',
+                  'Rahul Sharma',
+                  'Premium',
+                  '4500',
+                  'UPI',
+                  '21-05-2026'
+                  )">
+                  <i class="fas fa-file-invoice"></i>
+                  Invoice
+                </button>
+              </td>
+          </tr>
+
+          <tr>
+            <td>#INV102</td>
+            <td>Priya Das</td>
+            <td>Basic</td>
+            <td>₹2,500</td>
+            <td>Cash</td>
+            <td><span class="status active">Paid</span></td>
+            <td>20-05-2026</td>
+            <td>
+                <button class="btn save-btn"
+                  onclick="generateInvoice(
+                  'INV101',
+                  'Rahul Sharma',
+                  'Premium',
+                  '4500',
+                  'UPI',
+                  '21-05-2026'
+                  )">
+                  <i class="fas fa-file-invoice"></i>
+                  Invoice
+                </button>
+              </td>
+          </tr>
+
+          <tr>
+            <td>#INV103</td>
+            <td>Amit Kumar</td>
+            <td>Gold</td>
+            <td>₹6,000</td>
+            <td>Card</td>
+            <td><span class="status inactive">Pending</span></td>
+            <td>19-05-2026</td>
+            <td>
+                <button class="btn save-btn"
+                  onclick="generateInvoice(
+                  'INV101',
+                  'Rahul Sharma',
+                  'Premium',
+                  '4500',
+                  'UPI',
+                  '21-05-2026'
+                  )">
+                  <i class="fas fa-file-invoice"></i>
+                  Invoice
+                </button>
+              </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+  <!-- Add Payment Modal -->
+  <div class="modal" id="billingModal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Add Payment</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+
+      <form class="member-form">
+
+        <div class="form-group">
+          <label>Member Name</label>
+          <input type="text" placeholder="Enter member name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Membership Plan</label>
+          <select required>
+            <option>Basic</option>
+            <option>Premium</option>
+            <option>Gold</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" placeholder="Enter amount" required>
+        </div>
+
+        <div class="form-group">
+          <label>Payment Mode</label>
+          <select required>
+            <option>UPI</option>
+            <option>Cash</option>
+            <option>Card</option>
+            <option>Net Banking</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn save-btn">
+          Save Payment
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- Invoice Modal -->
+  <div class="modal" id="invoiceModal">
+
+    <div class="modal-content invoice-box">
+  
+      <div id="invoiceContent">
+  
+        <div class="invoice-header">
+          <h2>🏋 GymPro Fitness Center</h2>
+          <p>Bhubaneswar, Odisha, India</p>
+          <p>Phone: +91 9876543210</p>
+        </div>
+  
+        <hr>
+  
+        <h3 style="margin-top:15px;">
+          PAYMENT INVOICE
+        </h3>
+  
+        <div class="invoice-details">
+  
+          <p>
+            <strong>Invoice ID:</strong>
+            <span id="invoiceId"></span>
+          </p>
+  
+          <p>
+            <strong>Member Name:</strong>
+            <span id="memberName"></span>
+          </p>
+  
+          <p>
+            <strong>Membership:</strong>
+            <span id="membership"></span>
+          </p>
+  
+          <p>
+            <strong>Amount:</strong>
+            ₹<span id="amount"></span>
+          </p>
+  
+          <p>
+            <strong>Payment Mode:</strong>
+            <span id="paymentMode"></span>
+          </p>
+  
+          <p>
+            <strong>Date:</strong>
+            <span id="invoiceDate"></span>
+          </p>
+  
+        </div>
+  
+        <hr>
+  
+        <h3 style="text-align:right;">
+          Total: ₹<span id="totalAmount"></span>
+        </h3>
+  
+        <p style="text-align:center;margin-top:20px;">
+          Thank you for choosing GymPro 💪
+        </p>
+  
+      </div>
+  
+      <div style="margin-top:20px;display:flex;gap:10px;">
+        <button class="btn save-btn" onclick="printInvoice()">
+          <i class="fas fa-print"></i>
+          Print Invoice
+        </button>
+  
+        <button class="btn"
+          onclick="closeModal()">
+          Close
+        </button>
+      </div>
+  
+    </div>
+  
+  </div>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function openModal() {
+      document.getElementById("billingModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("billingModal").style.display = "none";
+    }
+
+    function searchBilling() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let rows = document.querySelectorAll("#billingTable tbody tr");
+
+      rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+
+<script>
+    function generateInvoice(
+      id,
+      name,
+      plan,
+      amount,
+      mode,
+      date
+    ) {
+  
+      document.getElementById(
+        "invoiceId"
+      ).innerText = id;
+  
+      document.getElementById(
+        "memberName"
+      ).innerText = name;
+  
+      document.getElementById(
+        "membership"
+      ).innerText = plan;
+  
+      document.getElementById(
+        "amount"
+      ).innerText = amount;
+  
+      document.getElementById(
+        "paymentMode"
+      ).innerText = mode;
+  
+      document.getElementById(
+        "invoiceDate"
+      ).innerText = date;
+  
+      document.getElementById(
+        "totalAmount"
+      ).innerText = amount;
+  
+      document.getElementById(
+        "invoiceModal"
+      ).style.display = "flex";
+    }
+  
+    function closeModal() {
+      document.getElementById(
+        "invoiceModal"
+      ).style.display = "none";
+    }
+  
+    function printInvoice() {
+  
+      const printContent =
+        document.getElementById(
+          "invoiceContent"
+        ).innerHTML;
+  
+      const originalContent =
+        document.body.innerHTML;
+  
+      document.body.innerHTML =
+        printContent;
+  
+      window.print();
+  
+      document.body.innerHTML =
+        originalContent;
+  
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>

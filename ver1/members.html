@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Members - Gym Management</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>🏋 GymPro</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li class="active"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+      <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+      <li><a href="workouts.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+      <li><a href="billing.html"><i class="fas fa-money-bill-wave"></i> Billing</a></li>
+      <li><a href="equipment.html"><i class="fas fa-tools"></i> Equipment</a></li>
+      <li><a href="classes.html"><i class="fas fa-running"></i> Classes</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Top Navbar -->
+    <header class="topbar">
+      <h1>Member Management</h1>
+
+      <div class="profile">
+        <i class="fas fa-user-circle"></i>
+        <span>Admin</span>
+      </div>
+    </header>
+
+    <!-- Action Buttons -->
+    <section class="page-actions">
+
+      <button class="btn add-btn" onclick="openModal()">
+        <i class="fas fa-user-plus"></i> Add Member
+      </button>
+
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Search member..."
+          onkeyup="searchMembers()"
+        >
+      </div>
+
+    </section>
+
+    <!-- Member Table -->
+    <section class="table-card">
+
+      <div class="table-header">
+        <h2>Gym Members</h2>
+      </div>
+
+      <table id="memberTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Membership</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>#101</td>
+            <td>Rahul Sharma</td>
+            <td>25</td>
+            <td>9876543210</td>
+            <td>Premium</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#102</td>
+            <td>Priya Das</td>
+            <td>23</td>
+            <td>9876543220</td>
+            <td>Basic</td>
+            <td><span class="status active">Active</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#103</td>
+            <td>Amit Kumar</td>
+            <td>30</td>
+            <td>9876543230</td>
+            <td>Gold</td>
+            <td><span class="status inactive">Expired</span></td>
+            <td>
+              <button class="edit-btn">
+                <i class="fas fa-edit"></i>
+              </button>
+
+              <button class="delete-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+  <!-- Add Member Modal -->
+  <div class="modal" id="memberModal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2>Add Member</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+
+      <form class="member-form">
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" placeholder="Enter age" required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" placeholder="Enter phone number" required>
+        </div>
+
+        <div class="form-group">
+          <label>Membership Plan</label>
+          <select required>
+            <option>Basic</option>
+            <option>Premium</option>
+            <option>Gold</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn save-btn">
+          Save Member
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <script src="js/script.js"></script>
+
+  <script>
+    function openModal() {
+      document.getElementById("memberModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("memberModal").style.display = "none";
+    }
+
+    function searchMembers() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let rows = document.querySelectorAll("#memberTable tbody tr");
+
+      rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  </script>
+
+</body>
+</html>

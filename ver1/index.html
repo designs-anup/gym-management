@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gym Management Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2>🏋 GymPro</h2>
+    </div>
+
+    <ul class="nav-links">
+      <li class="active"><a href="index.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+      <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="trainers.html"><i class="fas fa-user-tie"></i> Trainers</a></li>
+      <li><a href="workouts.html"><i class="fas fa-dumbbell"></i> Workouts</a></li>
+      <li><a href="billing.html"><i class="fas fa-money-bill-wave"></i> Billing</a></li>
+      <li><a href="equipment.html"><i class="fas fa-tools"></i> Equipment</a></li>
+      <li><a href="classes.html"><i class="fas fa-running"></i> Classes</a></li>
+      <li><a href="reports.html"><i class="fas fa-chart-pie"></i> Reports</a></li>
+      <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Top Navbar -->
+    <header class="topbar">
+
+      <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <h1>Dashboard</h1>
+      
+
+      <div class="profile-dropdown">
+
+        <div class="profile" onclick="toggleProfileMenu()">
+          <i class="fas fa-user-circle"></i>
+          <span>Admin</span>
+          <i class="fas fa-chevron-down dropdown-icon"></i>
+        </div>
+      
+        <div class="profile-menu" id="profileMenu">
+      
+          <a href="settings.html">
+            <i class="fas fa-cog"></i>
+            Settings
+          </a>
+      
+          <a href="login.html">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </a>
+      
+        </div>
+      
+      </div>
+      
+    </header>
+
+    <!-- Stats Cards -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-icon blue">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="card-info">
+          <h3>520</h3>
+          <p>Total Members</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">
+          <i class="fas fa-user-check"></i>
+        </div>
+        <div class="card-info">
+          <h3>320</h3>
+          <p>Present Today</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon orange">
+          <i class="fas fa-dumbbell"></i>
+        </div>
+        <div class="card-info">
+          <h3>15</h3>
+          <p>Active Trainers</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon red">
+          <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="card-info">
+          <h3>₹1,20,000</h3>
+          <p>Monthly Revenue</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Dashboard Content -->
+    <section class="dashboard-content">
+
+      <!-- Recent Members -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Recent Members</h2>
+          <a href="members.html" class="btn">View All</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Plan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#101</td>
+              <td>Rahul Sharma</td>
+              <td>Premium</td>
+              <td><span class="status active">Active</span></td>
+            </tr>
+            <tr>
+              <td>#102</td>
+              <td>Priya Das</td>
+              <td>Basic</td>
+              <td><span class="status active">Active</span></td>
+            </tr>
+            <tr>
+              <td>#103</td>
+              <td>Amit Kumar</td>
+              <td>Gold</td>
+              <td><span class="status inactive">Expired</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Upcoming Classes -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Today's Classes</h2>
+          <a href="classes.html" class="btn">View All</a>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Trainer</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Yoga</td>
+              <td>John</td>
+              <td>07:00 AM</td>
+            </tr>
+            <tr>
+              <td>Zumba</td>
+              <td>Riya</td>
+              <td>09:00 AM</td>
+            </tr>
+            <tr>
+              <td>CrossFit</td>
+              <td>David</td>
+              <td>06:00 PM</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

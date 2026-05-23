@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -21,50 +23,62 @@ import {
 const menuItems = [
   {
     title: "Dashboard",
+    path: "/",
     icon: <LayoutDashboard size={20} />,
   },
   {
     title: "Gyms Management",
+    path: "/gyms",
     icon: <Building2 size={20} />,
   },
   {
     title: "Subscriptions",
+    path: "/subscriptions",
     icon: <CreditCard size={20} />,
   },
   {
     title: "Revenue & Billing",
+    path: "/revenue",
     icon: <Wallet size={20} />,
   },
   {
     title: "Analytics",
+    path: "/analytics",
     icon: <BarChart3 size={20} />,
   },
   {
     title: "Gym Performance",
+    path: "/performance",
     icon: <Activity size={20} />,
   },
   {
     title: "Users & Roles",
+    path: "/users",
     icon: <Users size={20} />,
   },
   {
     title: "Announcements",
+    path: "/announcements",
     icon: <BellRing size={20} />,
   },
   {
     title: "Settings",
+    path: "/settings",
     icon: <Settings size={20} />,
   },
   {
     title: "Security & Backup",
+    path: "/security",
     icon: <ShieldCheck size={20} />,
   },
   {
     title: "Support Center",
+    path: "/support",
     icon: <LifeBuoy size={20} />,
   },
   {
     title: "Logs & Activity",
+    path: "/logs",
     icon: <ClipboardList size={20} />,
   },
 ];
@@ -165,31 +179,27 @@ export default function Sidebar() {
 
               return (
                 <li key={index}>
-                  <button
-                    onClick={() =>
-                      setActiveMenu(
-                        item.title
-                      )
-                    }
-                    className={`
-                      w-full flex items-center gap-4
-                      px-4 py-3 rounded-2xl
-                      transition-all duration-300
-                      ${
-                        isActive
-                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg"
-                          : "hover:bg-white/10"
-                      }
-                    `}
-                  >
-                    {item.icon}
+                    <NavLink
+                        to={item.path}
+                        className={({ isActive }) =>
+                        `w-full flex items-center gap-4
+                        px-4 py-3 rounded-2xl
+                        transition-all duration-300
+                        ${
+                            isActive
+                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg"
+                            : "hover:bg-white/10"
+                        }`
+                        }
+                    >
+                        {item.icon}
 
-                    {!collapsed && (
-                      <span className="text-sm font-medium">
-                        {item.title}
-                      </span>
-                    )}
-                  </button>
+                        {!collapsed && (
+                        <span className="text-sm font-medium">
+                            {item.title}
+                        </span>
+                        )}
+                    </NavLink>
                 </li>
               );
             })}

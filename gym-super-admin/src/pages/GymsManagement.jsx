@@ -83,6 +83,48 @@ export default function GymsManagement() {
     fetchGyms();
   }, []);
 
+  const updateGymStatus = async (
+    id,
+    status
+  ) => {
+    const { error } =
+      await supabase
+        .from("gyms")
+        .update({ status })
+        .eq("id", id);
+
+    if (!error) {
+      toast.success(
+        `Gym ${status}`
+      );
+
+      fetchGyms();
+    }
+  };
+  
+  const deleteGym = async (id) => {
+  const confirmed =
+      window.confirm(
+        "Delete this gym?"
+      );
+
+    if (!confirmed) return;
+
+    const { error } =
+      await supabase
+        .from("gyms")
+        .delete()
+        .eq("id", id);
+
+    if (!error) {
+      toast.success(
+        "Gym deleted"
+      );
+
+      fetchGyms();
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-white dark:bg-slate-900 rounded-[30px] p-8 shadow-lg">
@@ -218,6 +260,10 @@ export default function GymsManagement() {
                 <th className="text-left py-4">
                   Status
                 </th>
+
+                <th className="text-left py-4">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -248,13 +294,50 @@ export default function GymsManagement() {
                       {gym.status}
                     </span>
                   </td>
+
+                  <td className="py-4">
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() =>
+                          updateGymStatus(
+                            gym.id,
+                            "active"
+                          )
+                        }
+                        className="bg-green-600 text-white px-3 py-1 rounded-xl text-sm"
+                      >
+                        Approve
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          updateGymStatus(
+                            gym.id,
+                            "suspended"
+                          )
+                        }
+                        className="bg-yellow-500 text-white px-3 py-1 rounded-xl text-sm"
+                      >
+                        Suspend
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          deleteGym(gym.id)
+                        }
+                        className="bg-red-600 text-white px-3 py-1 rounded-xl text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      
+
     </div>
   );
 }

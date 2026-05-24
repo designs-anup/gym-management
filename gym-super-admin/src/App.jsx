@@ -15,69 +15,85 @@ import SecurityBackup from "./pages/SecurityBackup";
 import SupportCenter from "./pages/SupportCenter";
 import LogsActivity from "./pages/LogsActivity";
 
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
+      <Routes>
+        <Route path="/login"element={<Login />} />
 
-          <Route
-            path="/gyms-management"
-            element={<GymsManagement />}
-          />
+              <Route
+                path="*"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <Routes>
 
-          <Route
-            path="/subscriptions"
-            element={<Subscriptions />}
-          />
+                <Route path="/" element={<Dashboard />} />
 
-          <Route
-            path="/revenue-billing"
-            element={<RevenueBilling />}
-          />
+                <Route
+                  path="/gyms-management"
+                  element={<GymsManagement />}
+                />
 
-          <Route
-            path="/analytics"
-            element={<Analytics />}
-          />
+                <Route
+                  path="/subscriptions"
+                  element={<Subscriptions />}
+                />
 
-          <Route
-            path="/gym-performance"
-            element={<GymPerformance />}
-          />
+                <Route
+                  path="/revenue-billing"
+                  element={<RevenueBilling />}
+                />
 
-          <Route
-            path="/users-roles"
-            element={<UsersRoles />}
-          />
+                <Route
+                  path="/analytics"
+                  element={<Analytics />}
+                />
 
-          <Route
-            path="/announcements"
-            element={<Announcements />}
-          />
+                <Route
+                  path="/gym-performance"
+                  element={<GymPerformance />}
+                />
 
-          <Route
-            path="/settings"
-            element={<Settings />}
-          />
+                <Route
+                  path="/users-roles"
+                  element={<UsersRoles />}
+                />
 
-          <Route
-            path="/security-backup"
-            element={<SecurityBackup />}
-          />
+                <Route
+                  path="/announcements"
+                  element={<Announcements />}
+                />
 
-          <Route
-            path="/support-center"
-            element={<SupportCenter />}
-          />
+                <Route
+                  path="/settings"
+                  element={<Settings />}
+                />
 
-          <Route
-            path="/logs-activity"
-            element={<LogsActivity />}
-          />
-        </Routes>
-      </Layout>
+                <Route
+                  path="/security-backup"
+                  element={<SecurityBackup />}
+                />
+
+                <Route
+                  path="/support-center"
+                  element={<SupportCenter />}
+                />
+
+                <Route
+                  path="/logs-activity"
+                  element={<LogsActivity />}
+                />
+
+              </Routes>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

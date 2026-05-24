@@ -1,14 +1,7 @@
-import './App.css'
-import Sidebar from "./components/Sidebar";
-
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 
+// Pages
 import Dashboard from "./pages/Dashboard";
 import GymsManagement from "./pages/GymsManagement";
 import Subscriptions from "./pages/Subscriptions";
@@ -22,66 +15,69 @@ import SecurityBackup from "./pages/SecurityBackup";
 import SupportCenter from "./pages/SupportCenter";
 import LogsActivity from "./pages/LogsActivity";
 
-function App() {
-
+export default function App() {
   return (
-    <>
-      <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+
           <Route
-            path="/"
-            element={<Dashboard />}
-          />
-          <Route
-            path="/gyms"
+            path="/gyms-management"
             element={<GymsManagement />}
           />
+
           <Route
             path="/subscriptions"
             element={<Subscriptions />}
           />
+
           <Route
-            path="/revenue"
+            path="/revenue-billing"
             element={<RevenueBilling />}
           />
+
           <Route
             path="/analytics"
             element={<Analytics />}
           />
+
           <Route
-            path="/performance"
+            path="/gym-performance"
             element={<GymPerformance />}
           />
+
           <Route
-            path="/users"
+            path="/users-roles"
             element={<UsersRoles />}
           />
+
           <Route
             path="/announcements"
             element={<Announcements />}
           />
+
           <Route
             path="/settings"
             element={<Settings />}
           />
+
           <Route
-            path="/security"
+            path="/security-backup"
             element={<SecurityBackup />}
           />
+
           <Route
-            path="/support"
+            path="/support-center"
             element={<SupportCenter />}
           />
+
           <Route
-            path="/logs"
+            path="/logs-activity"
             element={<LogsActivity />}
           />
-        </Route>
-      </Routes>
+        </Routes>
+      </Layout>
     </BrowserRouter>
-    </>
-  )
+  );
 }
-
-export default App

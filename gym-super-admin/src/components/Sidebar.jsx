@@ -1,256 +1,167 @@
-import { NavLink } from "react-router-dom";
-
-import { useState } from "react";
 import {
   LayoutDashboard,
   Building2,
   CreditCard,
   Wallet,
   BarChart3,
-  Activity,
+  Dumbbell,
   Users,
-  BellRing,
+  Bell,
   Settings,
-  ShieldCheck,
+  Shield,
   LifeBuoy,
-  ClipboardList,
-  Menu,
+  Activity,
   X,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 
-const menuItems = [
+import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
+
+const menus = [
   {
-    title: "Dashboard",
+    name: "Dashboard",
     path: "/",
-    icon: <LayoutDashboard size={20} />,
+    icon: LayoutDashboard,
   },
   {
-    title: "Gyms Management",
-    path: "/gyms",
-    icon: <Building2 size={20} />,
+    name: "Gyms Management",
+    path: "/gyms-management",
+    icon: Building2,
   },
   {
-    title: "Subscriptions",
+    name: "Subscriptions",
     path: "/subscriptions",
-    icon: <CreditCard size={20} />,
+    icon: CreditCard,
   },
   {
-    title: "Revenue & Billing",
-    path: "/revenue",
-    icon: <Wallet size={20} />,
+    name: "Revenue & Billing",
+    path: "/revenue-billing",
+    icon: Wallet,
   },
   {
-    title: "Analytics",
+    name: "Analytics",
     path: "/analytics",
-    icon: <BarChart3 size={20} />,
+    icon: BarChart3,
   },
   {
-    title: "Gym Performance",
-    path: "/performance",
-    icon: <Activity size={20} />,
+    name: "Gym Performance",
+    path: "/gym-performance",
+    icon: Dumbbell,
   },
   {
-    title: "Users & Roles",
-    path: "/users",
-    icon: <Users size={20} />,
+    name: "Users & Roles",
+    path: "/users-roles",
+    icon: Users,
   },
   {
-    title: "Announcements",
+    name: "Announcements",
     path: "/announcements",
-    icon: <BellRing size={20} />,
+    icon: Bell,
   },
   {
-    title: "Settings",
+    name: "Settings",
     path: "/settings",
-    icon: <Settings size={20} />,
+    icon: Settings,
   },
   {
-    title: "Security & Backup",
-    path: "/security",
-    icon: <ShieldCheck size={20} />,
+    name: "Security",
+    path: "/security-backup",
+    icon: Shield,
   },
   {
-    title: "Support Center",
-    path: "/support",
-    icon: <LifeBuoy size={20} />,
+    name: "Support",
+    path: "/support-center",
+    icon: LifeBuoy,
   },
   {
-    title: "Logs & Activity",
-    path: "/logs",
-    icon: <ClipboardList size={20} />,
+    name: "Logs",
+    path: "/logs-activity",
+    icon: Activity,
   },
 ];
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] =
-    useState(false);
-  const [activeMenu, setActiveMenu] =
-    useState("Dashboard");
+export default function Sidebar({
+  sidebarOpen,
+  setSidebarOpen,
+}) {
+  const isDesktop =
+    typeof window !== "undefined" &&
+    window.innerWidth >= 1024;
 
   return (
     <>
-      {/* Mobile Button */}
-      <button
-        className="lg:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-xl shadow-lg"
-        onClick={() => setMobileOpen(true)}
-      >
-        <Menu size={22} />
-      </button>
-
-      {/* Overlay */}
-      {mobileOpen && (
+      {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           onClick={() =>
-            setMobileOpen(false)
+            setSidebarOpen(false)
           }
         />
       )}
 
-      {/* Sidebar */}
-      <aside
+      <motion.aside
+        initial={false}
+        animate={{
+          x: isDesktop
+            ? 0
+            : sidebarOpen
+            ? 0
+            : -300,
+        }}
+        transition={{ duration: 0.25 }}
         className={`
-        fixed top-0 left-0 h-screen z-50
-        bg-gradient-to-b
-        from-slate-950
-        via-blue-950
-        to-slate-900
-        text-white
-        transition-all duration-300
-        shadow-2xl
-        ${
-          collapsed
-            ? "w-24"
-            : "w-72"
-        }
-        ${
-          mobileOpen
-            ? "translate-x-0"
-            : "-translate-x-full"
-        }
-        lg:translate-x-0
-      `}
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center px-5 py-6 border-b border-white/10">
-          {!collapsed && (
-            <div>
-              <h1 className="text-2xl font-bold">
-                Gym SaaS
-              </h1>
-              <p className="text-xs text-slate-400">
-                Super Admin Panel
-              </p>
-            </div>
-          )}
+          fixed top-0 left-0 z-50
+          w-[280px] h-screen
+          bg-white dark:bg-slate-900
+          border-r border-slate-200
+          dark:border-slate-800
+          p-5
 
-          <button
-            className="hidden lg:flex p-2 rounded-lg hover:bg-white/10"
-            onClick={() =>
-              setCollapsed(!collapsed)
-            }
-          >
-            {collapsed ? (
-              <ChevronRight size={20} />
-            ) : (
-              <ChevronLeft size={20} />
-            )}
-          </button>
+          lg:translate-x-0
+          lg:block
+        `}
+      >
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold dark:text-white">
+            Gym SaaS
+          </h1>
 
           <button
             className="lg:hidden"
             onClick={() =>
-              setMobileOpen(false)
+              setSidebarOpen(false)
             }
           >
-            <X size={22} />
+            <X />
           </button>
         </div>
 
-        {/* Menu */}
-        <nav className="p-4 overflow-y-auto h-[calc(100vh-120px)]">
-          <ul className="space-y-2">
-            {menuItems.map((item, index) => {
-              const isActive =
-                activeMenu === item.title;
+        <nav className="space-y-2">
+          {menus.map((menu, index) => {
+            const Icon = menu.icon;
 
-              return (
-                <li key={index}>
-                    <NavLink
-                        to={item.path}
-                        className={({ isActive }) =>
-                        `w-full flex items-center gap-4
-                        px-4 py-3 rounded-2xl
-                        transition-all duration-300
-                        ${
-                            isActive
-                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg"
-                            : "hover:bg-white/10"
-                        }`
-                        }
-                    >
-                        {item.icon}
-
-                        {!collapsed && (
-                        <span className="text-sm font-medium">
-                            {item.title}
-                        </span>
-                        )}
-                    </NavLink>
-                </li>
-              );
-            })}
-          </ul>
+            return (
+              <NavLink
+                key={index}
+                to={menu.path}
+                onClick={() =>
+                  setSidebarOpen(false)
+                }
+                className={({ isActive }) =>
+                  `flex items-center gap-4 px-4 py-3 rounded-2xl transition-all ${
+                    isActive
+                      ? "bg-blue-600 text-white"
+                      : "hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-300"
+                  }`
+                }
+              >
+                <Icon size={20} />
+                {menu.name}
+              </NavLink>
+            );
+          })}
         </nav>
-
-        {/* Profile */}
-        <div className="absolute bottom-5 left-4 right-4">
-          <div className="bg-white/10 rounded-2xl p-4 flex items-center gap-3">
-            <img
-              src="https://i.pravatar.cc/100"
-              alt="Admin"
-              className="w-12 h-12 rounded-full"
-            />
-
-            {!collapsed && (
-              <div>
-                <h4 className="font-semibold text-sm">
-                  Super Admin
-                </h4>
-                <p className="text-xs text-slate-400">
-                  admin@gym.com
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <main
-        className={`
-          transition-all duration-300
-          min-h-screen p-8
-          ${
-            collapsed
-              ? "lg:ml-24"
-              : "lg:ml-72"
-          }
-        `}
-      >
-        <div className="bg-white p-8 rounded-3xl shadow-md">
-          <h1 className="text-3xl font-bold text-slate-800">
-            {activeMenu}
-          </h1>
-
-          <p className="text-slate-500 mt-2">
-            Super Admin Dashboard
-          </p>
-        </div>
-      </main>
+      </motion.aside>
     </>
   );
 }

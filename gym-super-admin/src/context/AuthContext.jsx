@@ -20,39 +20,54 @@ export function AuthProvider({
     useState(true);
 
   useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } =
-        await supabase.auth.getSession();
+    const getSession =
+      async () => {
+        const {
+          data: { session },
+        } =
+          await supabase.auth.getSession();
 
-      setUser(session?.user ?? null);
+        setUser(
+          session?.user || null
+        );
 
-      setLoading(false);
-    };
+        setLoading(false);
+      };
 
     getSession();
 
     const {
-      data: authListener,
+      data: listener,
     } =
       supabase.auth.onAuthStateChange(
-        (_event, session) => {
+        (
+          _event,
+          session
+        ) => {
           setUser(
-            session?.user ?? null
+            session?.user ||
+              null
           );
+
+          setLoading(false);
         }
       );
 
     return () => {
-      authListener.subscription.unsubscribe();
+      listener.subscription.unsubscribe();
     };
   }, []);
+
+  const logout =
+    async () => {
+      await supabase.auth.signOut();
+    };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        logout,
         loading,
       }}
     >
@@ -61,5 +76,8 @@ export function AuthProvider({
   );
 }
 
-export const useAuth = () =>
-  useContext(AuthContext);
+export const useAuth =
+  () =>
+    useContext(
+      AuthContext
+    );

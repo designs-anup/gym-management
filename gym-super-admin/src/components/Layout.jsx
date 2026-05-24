@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children }) {
+export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -16,7 +17,7 @@ export default function Layout({ children }) {
         <Navbar setSidebarOpen={setSidebarOpen} />
 
         <main className="p-6 min-h-[calc(100vh-80px)] bg-slate-100 dark:bg-slate-950">
-          {children}
+          <Outlet/>
         </main>
       </div>
     </div>

@@ -1,83 +1,48 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-
+import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-const AuthContext =
-  createContext();
+const AuthContext = createContext();
 
-export function AuthProvider({
-  children,
-}) {
-  const [user, setUser] =
-    useState(null);
-
-  const [loading, setLoading] =
-    useState(true);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getSession =
-      async () => {
-        const {
-          data: { session },
-        } =
-          await supabase.auth.getSession();
+    const getSession = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
 
-        setUser(
-          session?.user || null
-        );
+        if (error) {
+          console.error(error);
+        }
 
-        setLoading(false);
-      };
+        setUser(data?.session?.user ?? null);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // IMPORTANT
+      }
+    };
 
     getSession();
 
     const {
-      data: listener,
-    } =
-      supabase.auth.onAuthStateChange(
-        (
-          _event,
-          session
-        ) => {
-          setUser(
-            session?.user ||
-              null
-          );
-
-          setLoading(false);
-        }
-      );
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false); // IMPORTANT
+    });
 
     return () => {
-      listener.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 
-  const logout =
-    async () => {
-      await supabase.auth.signOut();
-    };
-
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        logout,
-        loading,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export const useAuth =
-  () =>
-    useContext(
-      AuthContext
-    );
+export const useAuth = () => useContext(AuthContext);

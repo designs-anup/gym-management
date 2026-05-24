@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { supabase } from "../lib/supabase";
+import { useEffect } from "react";
 
 export default function GymsManagement() {
   const [loading, setLoading] =
@@ -20,6 +21,8 @@ export default function GymsManagement() {
       status: "pending",
     });
 
+  const [gyms, setGyms] = useState([]);
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -62,6 +65,23 @@ export default function GymsManagement() {
 
     setLoading(false);
   };
+
+  const fetchGyms = async () => {
+  const { data, error } =
+      await supabase
+        .from("gyms")
+        .select("*")
+        .order("created_at", {
+          ascending: false,
+        });
+
+    if (!error) {
+      setGyms(data);
+    }
+  };
+  useEffect(() => {
+    fetchGyms();
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -169,6 +189,72 @@ export default function GymsManagement() {
           </button>
         </form>
       </div>
+
+      <div className="bg-white dark:bg-slate-900 rounded-[30px] p-8 shadow-lg mt-8">
+        <h2 className="text-2xl font-bold mb-6">
+          Registered Gyms
+        </h2>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left py-4">
+                  Gym
+                </th>
+
+                <th className="text-left py-4">
+                  Owner
+                </th>
+
+                <th className="text-left py-4">
+                  Email
+                </th>
+
+                <th className="text-left py-4">
+                  Plan
+                </th>
+
+                <th className="text-left py-4">
+                  Status
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {gyms.map((gym) => (
+                <tr
+                  key={gym.id}
+                  className="border-b hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+                >
+                  <td className="py-4 font-medium">
+                    {gym.gym_name}
+                  </td>
+
+                  <td className="py-4">
+                    {gym.owner_name}
+                  </td>
+
+                  <td className="py-4">
+                    {gym.email}
+                  </td>
+
+                  <td className="py-4 capitalize">
+                    {gym.subscription_plan}
+                  </td>
+
+                  <td className="py-4">
+                    <span className="px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-700">
+                      {gym.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
     </div>
   );
 }

@@ -112,7 +112,7 @@ export default function Sidebar({
         className={`
           fixed top-0 left-0 z-50
           w-[280px] h-screen
-          bg-white dark:bg-slate-900
+          bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
           border-r border-slate-200
           dark:border-slate-800
           p-5
@@ -148,14 +148,17 @@ export default function Sidebar({
                   setSidebarOpen(false)
                 }
                 className={({ isActive }) =>
-                  `flex items-center gap-4 px-4 py-3 rounded-2xl transition-all ${
+                  `group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 ${
                     isActive
-                      ? "bg-blue-600 text-white"
-                      : "hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-300"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg scale-[1.02]"
+                      : "hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-300 hover:translate-x-1"
                   }`
                 }
               >
-                <Icon size={20} />
+                <Icon
+                  size={20}
+                  className="transition-transform duration-300 group-hover:scale-110"
+                />
                 {menu.name}
               </NavLink>
             );

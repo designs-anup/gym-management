@@ -90,7 +90,7 @@ export default function Navbar({
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
           </button>
 
-          <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 rounded-2xl px-3 py-2">
+          <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 rounded-2xl px-3 py-2 hover:shadow-md transition-all cursor-pointer">
             <img
               src="https://i.pravatar.cc/100"
               alt=""

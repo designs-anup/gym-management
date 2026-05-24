@@ -44,13 +44,13 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Page Heading */}
-      <div>
-        <h1 className="text-4xl font-bold text-slate-800">
-          Dashboard
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[32px] p-8 text-white shadow-xl">
+        <h1 className="text-4xl font-bold">
+          Welcome Back, Super Admin 👋
         </h1>
 
-        <p className="text-slate-500 mt-2">
-          Welcome back, Super Admin 👋
+        <p className="mt-3 text-blue-100">
+          Manage gyms, subscriptions, revenue and analytics.
         </p>
       </div>
 

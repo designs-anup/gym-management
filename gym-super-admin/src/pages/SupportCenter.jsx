@@ -74,7 +74,7 @@ export default function SupportCenter() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
-        <div>
+        <div className="max-w-[1600px] mx-auto space-y-6">
           <h1 className="text-4xl font-bold text-slate-800">
             Support Center
           </h1>

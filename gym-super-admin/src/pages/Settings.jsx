@@ -12,7 +12,7 @@ export default function Settings() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
+      <div className="max-w-[1600px] mx-auto space-y-6">
         <h1 className="text-4xl font-bold text-slate-800">
           Platform Settings
         </h1>

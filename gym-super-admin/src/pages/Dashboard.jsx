@@ -10,6 +10,8 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import StatsCard from "../components/StatsCard";
+
 import {
   Building2,
   Users,
@@ -103,42 +105,16 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {stats.map((item, index) => {
-          const Icon = item.icon;
-
-          return (
-            <div
-              key={index}
-              className="group bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800 rounded-[30px] p-6 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-slate-500 text-sm">
-                    {item.title}
-                  </p>
-
-                  <h2 className="text-4xl font-bold mt-3 text-slate-800 dark:text-white">
-                    {item.value}
-                  </h2>
-
-                  <div className="flex items-center gap-2 mt-4 text-green-600 font-medium">
-                    <ArrowUpRight size={18} />
-                    {item.growth}
-                  </div>
-                </div>
-
-                <div
-                  className={`w-16 h-16 rounded-[22px] bg-gradient-to-r ${item.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                >
-                  <Icon
-                    size={30}
-                    className="text-white"
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {stats.map((item, index) => (
+          <StatsCard
+            key={index}
+            title={item.title}
+            value={item.value}
+            growth={item.growth}
+            icon={item.icon}
+            color={item.color}
+          />
+        ))}
       </div>
 
       {/* Charts Section */}

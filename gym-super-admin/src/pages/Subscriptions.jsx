@@ -23,6 +23,34 @@ export default function Subscriptions() {
     try {
       setLoading(true);
 
+      // Seed default plans (only once)
+      const defaultPlans = [
+        {
+          name: "Basic",
+          price: 999,
+          branches_limit: "1 Branch",
+          members_limit: "500 Members",
+        },
+        {
+          name: "Standard",
+          price: 2499,
+          branches_limit: "3 Branches",
+          members_limit: "1500 Members",
+        },
+        {
+          name: "Premium",
+          price: 4999,
+          branches_limit: "Unlimited",
+          members_limit: "Unlimited Members",
+        },
+      ];
+
+      await supabase
+        .from("subscription_plans")
+        .upsert(defaultPlans, {
+          onConflict: "name",
+        });
+
       // Fetch Plans
       const { data: plansData, error: plansError } =
         await supabase

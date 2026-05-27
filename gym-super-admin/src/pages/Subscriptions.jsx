@@ -31,21 +31,53 @@ export default function Subscriptions() {
     fetchData();
   }, []);
 
-  const createPlan = async () => {
-    try {
-      const { error } =
-        await supabase
-          .from(
-            "subscription_plans"
-          )
-          .insert([
-            formData,
-          ]);
+  // Edit plan
+  const [editingPlan, setEditingPlan] =
+  useState(null);
 
-      if (error)
-        throw error;
+  const savePlan = async () => {
+    try {
+      if (editingPlan) {
+        // UPDATE
+        const { error } =
+          await supabase
+            .from(
+              "subscription_plans"
+            )
+            .update({
+              name:
+                formData.name,
+              price:
+                formData.price,
+              branches_limit:
+                formData.branches_limit,
+              members_limit:
+                formData.members_limit,
+            })
+            .eq(
+              "id",
+              editingPlan.id
+            );
+
+        if (error)
+          throw error;
+      } else {
+        // CREATE
+        const { error } =
+          await supabase
+            .from(
+              "subscription_plans"
+            )
+            .insert([
+              formData,
+            ]);
+
+        if (error)
+          throw error;
+      }
 
       setShowModal(false);
+      setEditingPlan(null);
 
       setFormData({
         name: "",
@@ -57,87 +89,72 @@ export default function Subscriptions() {
       });
 
       fetchData();
-    } catch (err) {
-      console.error(err);
-      alert(
-        "Failed to create plan"
-      );
-    }
-  };
+        } catch (err) {
+          console.error(err);
+          alert(
+            "Failed to save plan"
+          );
+        }
+      };
 
-  /* --End Modal */
+      const handleEdit = (
+        plan
+      ) => {
+        setEditingPlan(plan);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-
-      // Seed default plans (only once)
-      const defaultPlans = [
-        {
-          name: "Basic",
-          price: 999,
-          branches_limit: "1 Branch",
-          members_limit: "500 Members",
-        },
-        {
-          name: "Standard",
-          price: 2499,
-          branches_limit: "3 Branches",
-          members_limit: "1500 Members",
-        },
-        {
-          name: "Premium",
-          price: 4999,
-          branches_limit: "Unlimited",
-          members_limit: "Unlimited Members",
-        },
-      ];
-
-      await supabase
-        .from("subscription_plans")
-        .upsert(defaultPlans, {
-          onConflict: "name",
+        setFormData({
+          name: plan.name,
+          price: plan.price,
+          branches_limit:
+            plan.branches_limit,
+          members_limit:
+            plan.members_limit,
         });
 
-      // Fetch Plans
-      const { data: plansData, error: plansError } =
-        await supabase
-          .from("subscription_plans")
-          .select("*");
+        setShowModal(true);
+      };
 
-      if (plansError) throw plansError;
+      /* --End Modal */
 
-      // Fetch subscriptions with gym relation
-      const {
-        data: subscriptionsData,
-        error: subscriptionsError,
-      } = await supabase
-        .from("subscriptions")
-        .select(`
-          *,
-          gyms (
-            gym_name,
-            owner_name
-          )
-        `);
+      const fetchData = async () => {
+      try {
+        setLoading(true);
 
-      if (subscriptionsError)
-        throw subscriptionsError;
+        // Fetch Plans
+        const { data: plansData, error: plansError } =
+          await supabase
+            .from("subscription_plans")
+            .select("*");
 
-      setPlans(plansData || []);
-      setSubscriptions(subscriptionsData || []);
+        if (plansError) throw plansError;
 
-      console.log("PLANS:", plansData);
-      console.log(
-        "SUBSCRIPTIONS:",
-        subscriptionsData
-      );
-    } catch (err) {
-      console.error("FETCH ERROR:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        // Fetch subscriptions
+        const {
+          data: subscriptionsData,
+          error: subscriptionsError,
+        } = await supabase
+          .from("subscriptions")
+          .select(`
+            *,
+            gyms (
+              gym_name,
+              owner_name
+            )
+          `);
+
+        if (subscriptionsError)
+          throw subscriptionsError;
+
+        setPlans(plansData || []);
+        setSubscriptions(
+          subscriptionsData || []
+        );
+      } catch (err) {
+        console.error("FETCH ERROR:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
   const deletePlan = async (id) => {
     const confirmDelete = window.confirm(
@@ -239,7 +256,12 @@ export default function Subscriptions() {
                   </div>
 
                   <div className="flex gap-2">
-                    <button className="p-2 rounded-xl bg-green-100 text-green-600">
+                    <button
+                      onClick={() =>
+                        handleEdit(plan)
+                      }
+                      className="p-2 rounded-xl bg-green-100 text-green-600"
+                    >
                       <Pencil size={18} />
                     </button>
 
@@ -380,7 +402,9 @@ export default function Subscriptions() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-3xl w-full max-w-lg p-8">
             <h2 className="text-2xl font-bold mb-6">
-              Create Plan
+              {editingPlan
+              ? "Edit Plan"
+              : "Create Plan"}
             </h2>
 
             <div className="space-y-4">
@@ -465,11 +489,13 @@ export default function Subscriptions() {
 
               <button
                 onClick={
-                  createPlan
+                  savePlan
                 }
                 className="bg-blue-600 text-white px-5 py-3 rounded-xl"
               >
-                Save Plan
+                {editingPlan
+                ? "Update Plan"
+                : "Save Plan"}
               </button>
             </div>
           </div>

@@ -116,45 +116,82 @@ export default function Subscriptions() {
 
       /* --End Modal */
 
-      const fetchData = async () => {
-      try {
-        setLoading(true);
+      const [showSubscriptionModal, setShowSubscriptionModal] =
+        useState(false);
 
-        // Fetch Plans
-        const { data: plansData, error: plansError } =
-          await supabase
+      const [editingSubscription, setEditingSubscription] =
+        useState(null);
+
+      const [gyms, setGyms] = useState([]);
+
+      const [subscriptionForm, setSubscriptionForm] =
+        useState({
+          gym_id: "",
+          plan_name: "",
+          amount: "",
+          start_date: "",
+          end_date: "",
+          status: "active",
+        });  
+
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+
+          // Fetch Plans
+          const {
+            data: plansData,
+            error: plansError,
+          } = await supabase
             .from("subscription_plans")
             .select("*");
 
-        if (plansError) throw plansError;
+          if (plansError) throw plansError;
 
-        // Fetch subscriptions
-        const {
-          data: subscriptionsData,
-          error: subscriptionsError,
-        } = await supabase
-          .from("subscriptions")
-          .select(`
-            *,
-            gyms (
-              gym_name,
-              owner_name
-            )
-          `);
+          // Fetch Gyms
+          const {
+            data: gymsData,
+            error: gymsError,
+          } = await supabase
+            .from("gyms")
+            .select("*");
 
-        if (subscriptionsError)
-          throw subscriptionsError;
+          console.log("GYMS:", gymsData);
 
-        setPlans(plansData || []);
-        setSubscriptions(
-          subscriptionsData || []
-        );
-      } catch (err) {
-        console.error("FETCH ERROR:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+          if (gymsError) throw gymsError;
+
+          // Fetch subscriptions
+          const {
+            data: subscriptionsData,
+            error: subscriptionsError,
+          } = await supabase
+            .from("subscriptions")
+            .select(`
+              *,
+              gyms (
+                gym_name,
+                owner_name
+              )
+            `);
+
+          if (subscriptionsError)
+            throw subscriptionsError;
+
+          setPlans(plansData || []);
+          setGyms(gymsData || []);
+          setSubscriptions(
+            subscriptionsData || []
+          );
+
+        } catch (err) {
+          console.error(
+            "FETCH ERROR:",
+            err
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
 
   const deletePlan = async (id) => {
     const confirmDelete = window.confirm(
@@ -206,6 +243,94 @@ export default function Subscriptions() {
     }
   };
 
+  const saveSubscription =
+  async () => {
+    try {
+      if (
+        editingSubscription
+      ) {
+        const { error } =
+          await supabase
+            .from(
+              "subscriptions"
+            )
+            .update(
+              subscriptionForm
+            )
+            .eq(
+              "id",
+              editingSubscription.id
+            );
+
+        if (error)
+          throw error;
+      } else {
+        const { error } =
+          await supabase
+            .from(
+              "subscriptions"
+            )
+            .insert([
+              subscriptionForm,
+            ]);
+
+        if (error)
+          throw error;
+      }
+
+      setShowSubscriptionModal(
+        false
+      );
+
+      setEditingSubscription(
+        null
+      );
+
+      setSubscriptionForm({
+        gym_id: "",
+        plan_name: "",
+        amount: "",
+        start_date: "",
+        end_date: "",
+        status:
+          "active",
+      });
+
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert(
+        "Failed to save subscription"
+      );
+    }
+  };
+
+  const handleEditSubscription =
+  (subscription) => {
+    setEditingSubscription(
+      subscription
+    );
+
+    setSubscriptionForm({
+      gym_id:
+        subscription.gym_id,
+      plan_name:
+        subscription.plan_name,
+      amount:
+        subscription.amount,
+      start_date:
+        subscription.start_date,
+      end_date:
+        subscription.end_date,
+      status:
+        subscription.status,
+    });
+
+    setShowSubscriptionModal(
+      true
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -220,15 +345,28 @@ export default function Subscriptions() {
           </p>
         </div>
 
-        <button
-          onClick={() =>
-            setShowModal(true)
-          }
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md"
-        >
-          <Plus size={20} />
-          Create Plan
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() =>
+              setShowSubscriptionModal(true)
+            }
+            className="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md"
+          >
+            <Plus size={20} />
+            Assign Subscription
+          </button>
+
+          <button
+            onClick={() =>
+              setShowModal(true)
+            }
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md"
+          >
+            <Plus size={20} />
+            Create Plan
+          </button>
+        </div>
+
       </div>
 
       {/* Plans */}
@@ -330,7 +468,7 @@ export default function Subscriptions() {
                 <th className="p-5">Plan</th>
                 <th className="p-5">Billing</th>
                 <th className="p-5">Expiry</th>
-                <th className="p-5">Status</th>
+                <th className="p-5">Actions</th>
               </tr>
             </thead>
 
@@ -365,19 +503,16 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    <span
-                      className={`px-4 py-2 rounded-full text-sm font-medium ${
-                        item.status ===
-                        "active"
-                          ? "bg-green-100 text-green-700"
-                          : item.status ===
-                            "trial"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                    <button
+                      onClick={() =>
+                        handleEditSubscription(
+                          item
+                        )
+                      }
+                      className="bg-green-100 text-green-600 p-2 rounded-lg"
                     >
-                      {item.status}
-                    </span>
+                      <Pencil size={18} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -496,6 +631,174 @@ export default function Subscriptions() {
                 {editingPlan
                 ? "Update Plan"
                 : "Save Plan"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSubscriptionModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl w-full max-w-lg p-8">
+            <h2 className="text-2xl font-bold mb-6">
+              {editingSubscription
+                ? "Edit Subscription"
+                : "Assign Subscription"}
+            </h2>
+
+            <div className="space-y-4">
+
+              <select
+                value={
+                  subscriptionForm.gym_id
+                }
+                onChange={(e) =>
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    gym_id:
+                      e.target.value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              >
+                <option value="">
+                  Select Gym
+                </option>
+
+                {gyms?.length > 0 &&
+                  gyms.map((gym) => (
+                    <option
+                      key={gym.id}
+                      value={gym.id}
+                    >
+                      {gym.gym_name || gym.name}
+                    </option>
+                ))}
+              </select>
+
+              <select
+                value={
+                  subscriptionForm.plan_name
+                }
+                onChange={(e) => {
+                  const selectedPlan =
+                    plans.find(
+                      (p) =>
+                        p.name ===
+                        e.target.value
+                    );
+
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    plan_name:
+                      e.target.value,
+                    amount:
+                      selectedPlan?.price ||
+                      "",
+                  });
+                }}
+                className="w-full border rounded-xl p-4"
+              >
+                <option value="">
+                  Select Plan
+                </option>
+
+                {plans.map((plan) => (
+                  <option
+                    key={plan.id}
+                    value={plan.name}
+                  >
+                    {plan.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="number"
+                placeholder="Amount"
+                value={
+                  subscriptionForm.amount
+                }
+                readOnly
+                className="w-full border rounded-xl p-4 bg-slate-100"
+              />
+
+              <input
+                type="date"
+                value={
+                  subscriptionForm.start_date
+                }
+                onChange={(e) =>
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    start_date:
+                      e.target.value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+
+              <input
+                type="date"
+                value={
+                  subscriptionForm.end_date
+                }
+                onChange={(e) =>
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    end_date:
+                      e.target.value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+
+              <select
+                value={
+                  subscriptionForm.status
+                }
+                onChange={(e) =>
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    status:
+                      e.target.value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              >
+                <option value="active">
+                  Active
+                </option>
+                <option value="trial">
+                  Trial
+                </option>
+                <option value="expired">
+                  Expired
+                </option>
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() =>
+                  setShowSubscriptionModal(
+                    false
+                  )
+                }
+                className="px-5 py-3 rounded-xl border"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={
+                  saveSubscription
+                }
+                className="bg-green-600 text-white px-5 py-3 rounded-xl"
+              >
+                {editingSubscription
+                  ? "Update"
+                  : "Assign"}
               </button>
             </div>
           </div>

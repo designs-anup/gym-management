@@ -15,9 +15,57 @@ export default function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  /* Modal Section */
+  const [showModal, setShowModal] =
+  useState(false);
+
+  const [formData, setFormData] =
+    useState({
+      name: "",
+      price: "",
+      branches_limit: "",
+      members_limit: "",
+    });
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  const createPlan = async () => {
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "subscription_plans"
+          )
+          .insert([
+            formData,
+          ]);
+
+      if (error)
+        throw error;
+
+      setShowModal(false);
+
+      setFormData({
+        name: "",
+        price: "",
+        branches_limit:
+          "",
+        members_limit:
+          "",
+      });
+
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert(
+        "Failed to create plan"
+      );
+    }
+  };
+
+  /* --End Modal */
 
   const fetchData = async () => {
     try {
@@ -155,7 +203,12 @@ export default function Subscriptions() {
           </p>
         </div>
 
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md">
+        <button
+          onClick={() =>
+            setShowModal(true)
+          }
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md"
+        >
           <Plus size={20} />
           Create Plan
         </button>
@@ -322,6 +375,107 @@ export default function Subscriptions() {
           </table>
         </div>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl w-full max-w-lg p-8">
+            <h2 className="text-2xl font-bold mb-6">
+              Create Plan
+            </h2>
+
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Plan Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    name:
+                      e.target
+                        .value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+
+              <input
+                type="number"
+                placeholder="Price"
+                value={
+                  formData.price
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    price:
+                      e.target
+                        .value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+
+              <input
+                type="text"
+                placeholder="Branches Limit"
+                value={
+                  formData.branches_limit
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    branches_limit:
+                      e.target
+                        .value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+
+              <input
+                type="text"
+                placeholder="Members Limit"
+                value={
+                  formData.members_limit
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    members_limit:
+                      e.target
+                        .value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() =>
+                  setShowModal(
+                    false
+                  )
+                }
+                className="px-5 py-3 rounded-xl border"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={
+                  createPlan
+                }
+                className="bg-blue-600 text-white px-5 py-3 rounded-xl"
+              >
+                Save Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

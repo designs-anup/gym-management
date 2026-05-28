@@ -179,8 +179,65 @@ export default function Subscriptions() {
 
           setPlans(plansData || []);
           setGyms(gymsData || []);
+                
+          const updatedSubscriptions =
+            (subscriptionsData || []).map(
+              (subscription) => {
+
+                const today =
+                  new Date();
+
+                const expiryDate =
+                  new Date(
+                    subscription.end_date
+                  );
+
+                if (
+                  subscription.status !==
+                    "expired" &&
+                  expiryDate < today
+                ) {
+                  return {
+                    ...subscription,
+                    status: "expired",
+                  };
+                }
+
+                return subscription;
+              }
+            );
+
+            const expiredItems =
+              subscriptionsData?.filter(
+                (subscription) => {
+
+                  const today =
+                    new Date();
+
+                  const expiryDate =
+                    new Date(
+                      subscription.end_date
+                    );
+
+                  return (
+                    subscription.status !==
+                      "expired" &&
+                    expiryDate < today
+                  );
+                }
+              ) || [];
+
+            for (const item of expiredItems) {
+              await supabase
+                .from("subscriptions")
+                .update({
+                  status: "expired",
+                })
+                .eq("id", item.id);
+            }
+
           setSubscriptions(
-            subscriptionsData || []
+            updatedSubscriptions
           );
 
         } catch (err) {
@@ -626,6 +683,7 @@ export default function Subscriptions() {
                 <th className="p-5">Plan</th>
                 <th className="p-5">Amount</th>
                 <th className="p-5">Expiry</th>
+                <th className="p-5">Status</th>
                 <th className="p-5">Actions</th>
               </tr>
             </thead>
@@ -658,6 +716,20 @@ export default function Subscriptions() {
                           item.end_date
                         ).toLocaleDateString()
                       : "-"}
+                  </td>
+
+                  <td className="p-5">
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm font-medium ${
+                        item.status === "active"
+                          ? "bg-green-100 text-green-700"
+                          : item.status === "trial"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
                   </td>
 
                   <td className="p-5">

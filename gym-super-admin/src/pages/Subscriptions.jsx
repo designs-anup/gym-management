@@ -129,6 +129,7 @@ export default function Subscriptions() {
           gym_id: "",
           plan_name: "",
           amount: "",
+          billing_cycle: "monthly",
           start_date: "",
           end_date: "",
           status: "active",
@@ -346,6 +347,7 @@ export default function Subscriptions() {
       setSubscriptionForm({
         gym_id: "",
         plan_name: "",
+        billing_cycle: "monthly",
         amount: "",
         start_date: "",
         end_date: "",
@@ -373,6 +375,8 @@ export default function Subscriptions() {
         subscription.gym_id,
       plan_name:
         subscription.plan_name,
+      billing_cycle:
+        subscription.billing_cycle || "monthly",
       amount:
         subscription.amount,
       start_date:
@@ -851,6 +855,7 @@ export default function Subscriptions() {
                 }
                 className="w-full border rounded-xl p-4"
               />
+
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
@@ -924,31 +929,62 @@ export default function Subscriptions() {
                   subscriptionForm.plan_name
                 }
                 onChange={(e) => {
-                  const selectedPlan = plans.find(
-                    (p) => p.name === e.target.value
-                  );
+                  const selectedPlan =
+                    plans.find(
+                      (p) =>
+                        p.name ===
+                        e.target.value
+                    );
 
-                  const updatedForm = {
-                    ...subscriptionForm,
-                    plan_name: e.target.value,
-                    amount: selectedPlan?.price || "",
-                  };
+                  const today =
+                    new Date();
 
-                  // only auto-set dates for NEW subscription
-                  if (!editingSubscription) {
-                    const today = new Date();
-                    const expiry = new Date();
+                  const expiry =
+                    new Date(today);
 
-                    expiry.setDate(today.getDate() + 30);
+                  switch (
+                    subscriptionForm.billing_cycle
+                  ) {
+                    case "monthly":
+                      expiry.setMonth(
+                        expiry.getMonth() + 1
+                      );
+                      break;
 
-                    updatedForm.start_date =
-                      today.toISOString().split("T")[0];
+                    case "quarterly":
+                      expiry.setMonth(
+                        expiry.getMonth() + 3
+                      );
+                      break;
 
-                    updatedForm.end_date =
-                      expiry.toISOString().split("T")[0];
+                    case "yearly":
+                      expiry.setFullYear(
+                        expiry.getFullYear() + 1
+                      );
+                      break;
+
+                    default:
+                      expiry.setMonth(
+                        expiry.getMonth() + 1
+                      );
                   }
 
-                  setSubscriptionForm(updatedForm);
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    plan_name:
+                      e.target.value,
+                    amount:
+                      selectedPlan?.price ||
+                      "",
+                    start_date:
+                      today
+                        .toISOString()
+                        .split("T")[0],
+                    end_date:
+                      expiry
+                        .toISOString()
+                        .split("T")[0],
+                  });
                 }}
                 className="w-full border rounded-xl p-4"
               >
@@ -964,6 +1000,32 @@ export default function Subscriptions() {
                     {plan.name}
                   </option>
                 ))}
+              </select>
+
+              <select
+                value={
+                  subscriptionForm.billing_cycle
+                }
+                onChange={(e) =>
+                  setSubscriptionForm({
+                    ...subscriptionForm,
+                    billing_cycle:
+                      e.target.value,
+                  })
+                }
+                className="w-full border rounded-xl p-4"
+              >
+                <option value="monthly">
+                  Monthly
+                </option>
+
+                <option value="quarterly">
+                  Quarterly
+                </option>
+
+                <option value="yearly">
+                  Yearly
+                </option>
               </select>
 
               <input
@@ -1042,6 +1104,7 @@ export default function Subscriptions() {
                     gym_id: "",
                     plan_name: "",
                     amount: "",
+                    billing_cycle: "monthly",
                     start_date: "",
                     end_date: "",
                     status: "active",

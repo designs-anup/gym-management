@@ -497,7 +497,7 @@ export default function Subscriptions() {
                 <th className="p-5">Gym</th>
                 <th className="p-5">Owner</th>
                 <th className="p-5">Plan</th>
-                <th className="p-5">Billing</th>
+                <th className="p-5">Amount</th>
                 <th className="p-5">Expiry</th>
                 <th className="p-5">Actions</th>
               </tr>
@@ -522,7 +522,7 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    {item.billing_cycle}
+                    {item.amount}
                   </td>
 
                   <td className="p-5">
@@ -725,21 +725,31 @@ export default function Subscriptions() {
                   subscriptionForm.plan_name
                 }
                 onChange={(e) => {
-                  const selectedPlan =
-                    plans.find(
-                      (p) =>
-                        p.name ===
-                        e.target.value
-                    );
+                  const selectedPlan = plans.find(
+                    (p) => p.name === e.target.value
+                  );
 
-                  setSubscriptionForm({
+                  const updatedForm = {
                     ...subscriptionForm,
-                    plan_name:
-                      e.target.value,
-                    amount:
-                      selectedPlan?.price ||
-                      "",
-                  });
+                    plan_name: e.target.value,
+                    amount: selectedPlan?.price || "",
+                  };
+
+                  // only auto-set dates for NEW subscription
+                  if (!editingSubscription) {
+                    const today = new Date();
+                    const expiry = new Date();
+
+                    expiry.setDate(today.getDate() + 30);
+
+                    updatedForm.start_date =
+                      today.toISOString().split("T")[0];
+
+                    updatedForm.end_date =
+                      expiry.toISOString().split("T")[0];
+                  }
+
+                  setSubscriptionForm(updatedForm);
                 }}
                 className="w-full border rounded-xl p-4"
               >
@@ -784,6 +794,7 @@ export default function Subscriptions() {
 
               <input
                 type="date"
+                readOnly
                 value={
                   subscriptionForm.end_date
                 }
@@ -824,11 +835,19 @@ export default function Subscriptions() {
 
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() =>
-                  setShowSubscriptionModal(
-                    false
-                  )
-                }
+                onClick={() => {
+                  setShowSubscriptionModal(false);
+                  setEditingSubscription(null);
+
+                  setSubscriptionForm({
+                    gym_id: "",
+                    plan_name: "",
+                    amount: "",
+                    start_date: "",
+                    end_date: "",
+                    status: "active",
+                  });
+                }}
                 className="px-5 py-3 rounded-xl border"
               >
                 Cancel

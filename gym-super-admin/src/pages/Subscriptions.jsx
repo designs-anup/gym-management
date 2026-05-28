@@ -362,6 +362,35 @@ export default function Subscriptions() {
     }
   };
 
+  const [search, setSearch] =
+    useState("");
+
+  const [statusFilter, setStatusFilter] =
+    useState("all");
+
+  const filteredSubscriptions =
+    subscriptions.filter((item) => {
+
+      const gymName =
+        item.gyms?.gym_name?.toLowerCase() || "";
+
+      const matchesSearch =
+        gymName.includes(
+          search.toLowerCase()
+        );
+
+      const matchesStatus =
+        statusFilter === "all"
+          ? true
+          : item.status ===
+            statusFilter;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+  });  
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -396,6 +425,104 @@ export default function Subscriptions() {
             <Plus size={20} />
             Create Plan
           </button>
+        </div>
+
+      </div>
+
+      <div className="p-6 border-b flex flex-col md:flex-row gap-4 justify-between">
+
+        <input
+          type="text"
+          placeholder="Search gym..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          className="border rounded-xl px-4 py-3 w-full md:w-80"
+        />
+
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(
+              e.target.value
+            )
+          }
+          className="border rounded-xl px-4 py-3"
+        >
+          <option value="all">
+            All Status
+          </option>
+
+          <option value="active">
+            Active
+          </option>
+
+          <option value="trial">
+            Trial
+          </option>
+
+          <option value="expired">
+            Expired
+          </option>
+        </select>
+
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border">
+          <h3 className="text-slate-500 text-sm">
+            Active Subscriptions
+          </h3>
+          <h2 className="text-3xl font-bold mt-2">
+            {
+              subscriptions.filter(
+                (s) => s.status === "active"
+              ).length
+            }
+          </h2>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border">
+          <h3 className="text-slate-500 text-sm">
+            Trial Gyms
+          </h3>
+          <h2 className="text-3xl font-bold mt-2">
+            {
+              subscriptions.filter(
+                (s) => s.status === "trial"
+              ).length
+            }
+          </h2>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border">
+          <h3 className="text-slate-500 text-sm">
+            Expired
+          </h3>
+          <h2 className="text-3xl font-bold mt-2">
+            {
+              subscriptions.filter(
+                (s) => s.status === "expired"
+              ).length
+            }
+          </h2>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border">
+          <h3 className="text-slate-500 text-sm">
+            Revenue
+          </h3>
+          <h2 className="text-3xl font-bold mt-2">
+            ₹
+            {subscriptions.reduce(
+              (total, item) =>
+                total +
+                Number(item.amount || 0),
+              0
+            )}
+          </h2>
         </div>
 
       </div>
@@ -504,7 +631,7 @@ export default function Subscriptions() {
             </thead>
 
             <tbody>
-              {subscriptions.map((item) => (
+              {filteredSubscriptions.map((item) => (
                 <tr
                   key={item.id}
                   className="border-b hover:bg-slate-50"

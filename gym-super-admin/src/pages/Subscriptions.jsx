@@ -331,6 +331,37 @@ export default function Subscriptions() {
     );
   };
 
+  const deleteSubscription =
+  async (id) => {
+    const confirmDelete =
+      window.confirm(
+        "Delete this subscription?"
+      );
+
+    if (!confirmDelete)
+      return;
+
+    try {
+      const { error } =
+        await supabase
+          .from(
+            "subscriptions"
+          )
+          .delete()
+          .eq("id", id);
+
+      if (error)
+        throw error;
+
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      alert(
+        "Failed to delete subscription"
+      );
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -503,16 +534,29 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    <button
-                      onClick={() =>
-                        handleEditSubscription(
-                          item
-                        )
-                      }
-                      className="bg-green-100 text-green-600 p-2 rounded-lg"
-                    >
-                      <Pencil size={18} />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() =>
+                          handleEditSubscription(
+                            item
+                          )
+                        }
+                        className="bg-green-100 text-green-600 p-2 rounded-lg"
+                      >
+                        <Pencil size={18} />
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          deleteSubscription(
+                            item.id
+                          )
+                        }
+                        className="bg-red-100 text-red-600 p-2 rounded-lg"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

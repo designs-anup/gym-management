@@ -925,26 +925,20 @@ export default function Subscriptions() {
               </select>
 
               <select
-                value={
-                  subscriptionForm.plan_name
-                }
+                value={subscriptionForm.billing_cycle}
                 onChange={(e) => {
-                  const selectedPlan =
-                    plans.find(
-                      (p) =>
-                        p.name ===
-                        e.target.value
-                    );
+                  const cycle = e.target.value;
 
-                  const today =
-                    new Date();
+                  const start = subscriptionForm.start_date
+                    ? new Date(
+                        subscriptionForm.start_date
+                      )
+                    : new Date();
 
                   const expiry =
-                    new Date(today);
+                    new Date(start);
 
-                  switch (
-                    subscriptionForm.billing_cycle
-                  ) {
+                  switch (cycle) {
                     case "monthly":
                       expiry.setMonth(
                         expiry.getMonth() + 1
@@ -971,15 +965,7 @@ export default function Subscriptions() {
 
                   setSubscriptionForm({
                     ...subscriptionForm,
-                    plan_name:
-                      e.target.value,
-                    amount:
-                      selectedPlan?.price ||
-                      "",
-                    start_date:
-                      today
-                        .toISOString()
-                        .split("T")[0],
+                    billing_cycle: cycle,
                     end_date:
                       expiry
                         .toISOString()
@@ -988,18 +974,17 @@ export default function Subscriptions() {
                 }}
                 className="w-full border rounded-xl p-4"
               >
-                <option value="">
-                  Select Plan
+                <option value="monthly">
+                  Monthly
                 </option>
 
-                {plans.map((plan) => (
-                  <option
-                    key={plan.id}
-                    value={plan.name}
-                  >
-                    {plan.name}
-                  </option>
-                ))}
+                <option value="quarterly">
+                  Quarterly
+                </option>
+
+                <option value="yearly">
+                  Yearly
+                </option>
               </select>
 
               <select

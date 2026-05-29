@@ -535,74 +535,75 @@ export default function Subscriptions() {
       );
   });
   
-  const renewSubscription =
-    async (subscription) => {
-      try {
-        const start =
-          new Date();
+  const renewSubscription = async (subscription) => {
 
-        const expiry =
-          new Date(start);
+      const start =
+        new Date();
 
-        switch (
-          subscription.billing_cycle
-        ) {
-          case "monthly":
-            expiry.setMonth(
-              expiry.getMonth() + 1
-            );
-            break;
+      const expiry =
+        new Date(start);
 
-          case "quarterly":
-            expiry.setMonth(
-              expiry.getMonth() + 3
-            );
-            break;
+      switch (
+        subscription.billing_cycle
+      ) {
+        case "monthly":
+          expiry.setMonth(
+            expiry.getMonth() + 1
+          );
+          break;
 
-          case "yearly":
-            expiry.setFullYear(
-              expiry.getFullYear() + 1
-            );
-            break;
+        case "quarterly":
+          expiry.setMonth(
+            expiry.getMonth() + 3
+          );
+          break;
 
-          default:
-            expiry.setMonth(
-              expiry.getMonth() + 1
-            );
-        }
+        case "yearly":
+          expiry.setFullYear(
+            expiry.getFullYear() + 1
+          );
+          break;
 
-        const { error } =
-          await supabase
-            .from("subscriptions")
-            .update({
-              start_date:
-                start
-                  .toISOString()
-                  .split("T")[0],
-
-              end_date:
-                expiry
-                  .toISOString()
-                  .split("T")[0],
-
-              status: "active",
-            })
-            .eq(
-              "id",
-              subscription.id
-            );
-
-        if (error)
-          throw error;
-
-        fetchData();
-
-      } catch (err) {
-        console.error(err);
-        alert(
-          "Failed to renew"
-        );
+        default:
+          expiry.setMonth(
+            expiry.getMonth() + 1
+          );
       }
+
+      const { error } =
+        await supabase
+          .from("subscriptions")
+          .update({
+            start_date:
+              start
+                .toISOString()
+                .split("T")[0],
+
+            end_date:
+              expiry
+                .toISOString()
+                .split("T")[0],
+
+            status: "active",
+          })
+          .eq(
+            "id",
+            subscription.id
+          );
+
+      if (error) {
+        console.error(error);
+        alert(
+          "Renew failed"
+        );
+        return;
+      }
+
+      alert(
+        "Subscription renewed successfully"
+      );
+
+      fetchData();
     };
 
     const generateInvoice = (

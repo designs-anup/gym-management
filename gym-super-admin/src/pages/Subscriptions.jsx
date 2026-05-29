@@ -385,102 +385,132 @@ export default function Subscriptions() {
   };
 
   const saveSubscription = async () => {
-      try {
+  try {
+    if (editingSubscription) {
+      // UPDATE SUBSCRIPTION
+      const { error } = await supabase
+        .from("subscriptions")
+        .update(subscriptionForm)
+        .eq("id", editingSubscription.id);
 
-        if (
-          editingSubscription
-        ) {
+      if (error) throw error;
 
-          // UPDATE ONLY
-          const { error } =
-            await supabase
-              .from(
-                "subscriptions"
-              )
-              .update(
-                subscriptionForm
-              )
-              .eq(
-                "id",
-                editingSubscription.id
-              );
+      // INSERT PAYMENT LOG
+      const { error: paymentError } =
+        await supabase
+          .from("subscription_payments")
+          .insert([
+            {
+              subscription_id:
+                editingSubscription.id,
 
-          if (error)
-            throw error;
+              gym_id:
+                subscriptionForm.gym_id,
 
-        } else {
+              plan_name:
+                subscriptionForm.plan_name,
 
-          // CREATE NEW SUBSCRIPTION
-          const { error } =
-            await supabase
-              .from(
-                "subscriptions"
-              )
-              .insert([
-                subscriptionForm,
-              ]);
+              amount:
+                Number(subscriptionForm.amount),
 
-          if (error)
-            throw error;
+              billing_cycle:
+                subscriptionForm.billing_cycle,
 
-          // PAYMENT LOG
-          await supabase
-            .from(
-              "subscription_payments"
-            )
-            .insert([
-              {
-                gym_id:
-                  subscriptionForm.gym_id,
+              payment_status:
+                "paid",
+            },
+          ]);
 
-                plan_name:
-                  subscriptionForm.plan_name,
+      if (paymentError)
+        throw paymentError;
+    } else {
+      // CREATE SUBSCRIPTION
+      const {
+        data: subscriptionData,
+        error: subscriptionError,
+      } = await supabase
+        .from("subscriptions")
+        .insert([subscriptionForm])
+        .select()
+        .single();
 
-                amount:
-                  subscriptionForm.amount,
+      if (subscriptionError)
+        throw subscriptionError;
 
-                billing_cycle:
-                  subscriptionForm.billing_cycle,
+      console.log(
+        "SUB CREATED:",
+        subscriptionData
+      );
 
-                payment_status:
-                  "paid",
-              },
-            ]);
-        }
+      // INSERT PAYMENT
+      const {
+        data: paymentData,
+        error: paymentError,
+      } = await supabase
+        .from(
+          "subscription_payments"
+        )
+        .insert([
+          {
+            subscription_id:
+              subscriptionData.id,
 
-        setShowSubscriptionModal(
-          false
-        );
+            gym_id:
+              subscriptionForm.gym_id,
 
-        setEditingSubscription(
-          null
-        );
+            plan_name:
+              subscriptionForm.plan_name,
 
-        setSubscriptionForm({
-          gym_id: "",
-          plan_name: "",
-          amount: "",
-          billing_cycle:
-            "monthly",
-          start_date: "",
-          end_date: "",
-          status:
-            "active",
-          auto_renew:
-            false,
-        });
+            amount: Number(
+              subscriptionForm.amount
+            ),
 
-        fetchData();
+            billing_cycle:
+              subscriptionForm.billing_cycle,
 
-      } catch (err) {
+            payment_status:
+              "paid",
+          },
+        ])
+        .select();
 
-        console.error(err);
+      console.log(
+        "PAYMENT INSERT:",
+        paymentData,
+        paymentError
+      );
 
-        alert(
-          "Failed to save subscription"
-        );
-      }
-    };
+      if (paymentError)
+        throw paymentError;
+    }
+
+    setShowSubscriptionModal(false);
+    setEditingSubscription(null);
+
+    setSubscriptionForm({
+      gym_id: "",
+      plan_name: "",
+      amount: "",
+      billing_cycle:
+        "monthly",
+      start_date: "",
+      end_date: "",
+      status: "active",
+      auto_renew: false,
+    });
+
+    fetchData();
+  } catch (err) {
+    console.error(
+      "SAVE ERROR:",
+      err
+    );
+
+    alert(
+      "Failed to save subscription"
+    );
+  }
+};
 
   const handleEditSubscription =
   (subscription) => {

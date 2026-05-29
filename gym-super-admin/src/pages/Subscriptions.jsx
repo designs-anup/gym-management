@@ -384,68 +384,103 @@ export default function Subscriptions() {
     }
   };
 
-  const saveSubscription =
-  async () => {
-    try {
-      if (
-        editingSubscription
-      ) {
-        const { error } =
-          await supabase
-            .from(
-              "subscriptions"
-            )
-            .update(
-              subscriptionForm
-            )
-            .eq(
-              "id",
-              editingSubscription.id
-            );
+  const saveSubscription = async () => {
+      try {
 
-        if (error)
-          throw error;
-      } else {
-        const { error } =
+        if (
+          editingSubscription
+        ) {
+
+          // UPDATE ONLY
+          const { error } =
+            await supabase
+              .from(
+                "subscriptions"
+              )
+              .update(
+                subscriptionForm
+              )
+              .eq(
+                "id",
+                editingSubscription.id
+              );
+
+          if (error)
+            throw error;
+
+        } else {
+
+          // CREATE NEW SUBSCRIPTION
+          const { error } =
+            await supabase
+              .from(
+                "subscriptions"
+              )
+              .insert([
+                subscriptionForm,
+              ]);
+
+          if (error)
+            throw error;
+
+          // PAYMENT LOG
           await supabase
             .from(
-              "subscriptions"
+              "subscription_payments"
             )
             .insert([
-              subscriptionForm,
+              {
+                gym_id:
+                  subscriptionForm.gym_id,
+
+                plan_name:
+                  subscriptionForm.plan_name,
+
+                amount:
+                  subscriptionForm.amount,
+
+                billing_cycle:
+                  subscriptionForm.billing_cycle,
+
+                payment_status:
+                  "paid",
+              },
             ]);
+        }
 
-        if (error)
-          throw error;
+        setShowSubscriptionModal(
+          false
+        );
+
+        setEditingSubscription(
+          null
+        );
+
+        setSubscriptionForm({
+          gym_id: "",
+          plan_name: "",
+          amount: "",
+          billing_cycle:
+            "monthly",
+          start_date: "",
+          end_date: "",
+          status:
+            "active",
+          auto_renew:
+            false,
+        });
+
+        fetchData();
+
+      } catch (err) {
+
+        console.error(err);
+
+        alert(
+          "Failed to save subscription"
+        );
       }
-
-      setShowSubscriptionModal(
-        false
-      );
-
-      setEditingSubscription(
-        null
-      );
-
-      setSubscriptionForm({
-        gym_id: "",
-        plan_name: "",
-        amount: "",
-        billing_cycle: "monthly",
-        start_date: "",
-        end_date: "",
-        status: "active",
-        auto_renew: false,
-      });
-
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      alert(
-        "Failed to save subscription"
-      );
-    }
-  };
+    };
 
   const handleEditSubscription =
   (subscription) => {
@@ -537,74 +572,107 @@ export default function Subscriptions() {
   
   const renewSubscription = async (subscription) => {
 
-      const start =
-        new Date();
+    const start =
+      new Date();
 
-      const expiry =
-        new Date(start);
+    const expiry =
+      new Date(start);
 
-      switch (
-        subscription.billing_cycle
-      ) {
-        case "monthly":
-          expiry.setMonth(
-            expiry.getMonth() + 1
-          );
-          break;
-
-        case "quarterly":
-          expiry.setMonth(
-            expiry.getMonth() + 3
-          );
-          break;
-
-        case "yearly":
-          expiry.setFullYear(
-            expiry.getFullYear() + 1
-          );
-          break;
-
-        default:
-          expiry.setMonth(
-            expiry.getMonth() + 1
-          );
-      }
-
-      const { error } =
-        await supabase
-          .from("subscriptions")
-          .update({
-            start_date:
-              start
-                .toISOString()
-                .split("T")[0],
-
-            end_date:
-              expiry
-                .toISOString()
-                .split("T")[0],
-
-            status: "active",
-          })
-          .eq(
-            "id",
-            subscription.id
-          );
-
-      if (error) {
-        console.error(error);
-        alert(
-          "Renew failed"
+    switch (
+      subscription.billing_cycle
+    ) {
+      case "monthly":
+        expiry.setMonth(
+          expiry.getMonth() + 1
         );
-        return;
-      }
+        break;
+
+      case "quarterly":
+        expiry.setMonth(
+          expiry.getMonth() + 3
+        );
+        break;
+
+      case "yearly":
+        expiry.setFullYear(
+          expiry.getFullYear() + 1
+        );
+        break;
+
+      default:
+        expiry.setMonth(
+          expiry.getMonth() + 1
+        );
+    }
+
+    const { error } =
+      await supabase
+        .from(
+          "subscriptions"
+        )
+        .update({
+          start_date:
+            start
+              .toISOString()
+              .split("T")[0],
+
+          end_date:
+            expiry
+              .toISOString()
+              .split("T")[0],
+
+          status:
+            "active",
+        })
+        .eq(
+          "id",
+          subscription.id
+        );
+
+    // CHECK ERROR FIRST
+    if (error) {
+      console.error(error);
 
       alert(
-        "Subscription renewed successfully"
+        "Renew failed"
       );
 
-      fetchData();
-    };
+      return;
+    }
+
+    // INSERT PAYMENT LOG
+    await supabase
+      .from(
+        "subscription_payments"
+      )
+      .insert([
+        {
+          subscription_id:
+            subscription.id,
+
+          gym_id:
+            subscription.gym_id,
+
+          plan_name:
+            subscription.plan_name,
+
+          amount:
+            subscription.amount,
+
+          billing_cycle:
+            subscription.billing_cycle,
+
+          payment_status:
+            "paid",
+        },
+      ]);
+
+    alert(
+      "Subscription renewed successfully"
+    );
+
+    fetchData();
+  };
 
     const generateInvoice = (
         subscription

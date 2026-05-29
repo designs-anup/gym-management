@@ -130,6 +130,7 @@ export default function Subscriptions() {
           plan_name: "",
           amount: "",
           billing_cycle: "monthly",
+          auto_renew: true,
           start_date: "",
           end_date: "",
           status: "active",
@@ -450,7 +451,172 @@ export default function Subscriptions() {
         matchesSearch &&
         matchesStatus
       );
-  });  
+  });
+  
+  const renewSubscription =
+    async (subscription) => {
+      try {
+        const start =
+          new Date();
+
+        const expiry =
+          new Date(start);
+
+        switch (
+          subscription.billing_cycle
+        ) {
+          case "monthly":
+            expiry.setMonth(
+              expiry.getMonth() + 1
+            );
+            break;
+
+          case "quarterly":
+            expiry.setMonth(
+              expiry.getMonth() + 3
+            );
+            break;
+
+          case "yearly":
+            expiry.setFullYear(
+              expiry.getFullYear() + 1
+            );
+            break;
+
+          default:
+            expiry.setMonth(
+              expiry.getMonth() + 1
+            );
+        }
+
+        const { error } =
+          await supabase
+            .from("subscriptions")
+            .update({
+              start_date:
+                start
+                  .toISOString()
+                  .split("T")[0],
+
+              end_date:
+                expiry
+                  .toISOString()
+                  .split("T")[0],
+
+              status: "active",
+            })
+            .eq(
+              "id",
+              subscription.id
+            );
+
+        if (error)
+          throw error;
+
+        fetchData();
+
+      } catch (err) {
+        console.error(err);
+        alert(
+          "Failed to renew"
+        );
+      }
+    };
+
+    const generateInvoice =
+      (subscription) => {
+
+        const invoiceWindow =
+          window.open(
+            "",
+            "_blank"
+          );
+
+        invoiceWindow.document.write(`
+          <html>
+            <head>
+              <title>Invoice</title>
+
+              <style>
+                body {
+                  font-family: Arial;
+                  padding: 40px;
+                }
+
+                h1 {
+                  color: #16a34a;
+                }
+
+                table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin-top: 20px;
+                }
+
+                td, th {
+                  border: 1px solid #ccc;
+                  padding: 12px;
+                }
+              </style>
+            </head>
+
+            <body>
+              <h1>Gym Subscription Invoice</h1>
+
+              <table>
+                <tr>
+                  <th>Gym</th>
+                  <td>
+                    ${
+                      subscription.gyms
+                        ?.gym_name
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Plan</th>
+                  <td>
+                    ${
+                      subscription.plan_name
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Amount</th>
+                  <td>
+                    ₹${subscription.amount}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Billing</th>
+                  <td>
+                    ${
+                      subscription.billing_cycle
+                    }
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Status</th>
+                  <td>
+                    ${
+                      subscription.status
+                    }
+                  </td>
+                </tr>
+              </table>
+
+              <script>
+                window.print()
+              </script>
+
+            </body>
+          </html>
+        `);
+      };
 
   return (
     <div className="space-y-8">
@@ -478,9 +644,18 @@ export default function Subscriptions() {
           </button>
 
           <button
-            onClick={() =>
-              setShowModal(true)
-            }
+            onClick={() => {
+              setEditingPlan(null);
+
+              setFormData({
+                name: "",
+                price: "",
+                branches_limit: "",
+                members_limit: "",
+              });
+
+              setShowModal(true);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-md"
           >
             <Plus size={20} />
@@ -686,6 +861,7 @@ export default function Subscriptions() {
                 <th className="p-5">Owner</th>
                 <th className="p-5">Plan</th>
                 <th className="p-5">Amount</th>
+                <th className="p-5">Auto Renew</th>
                 <th className="p-5">Expiry</th>
                 <th className="p-5">Status</th>
                 <th className="p-5">Actions</th>
@@ -715,11 +891,48 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    {item.end_date
-                      ? new Date(
-                          item.end_date
-                        ).toLocaleDateString()
-                      : "-"}
+                    {item.auto_renew ? (
+                      <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                        Enabled
+                      </span>
+                    ) : (
+                      <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm">
+                        Disabled
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="p-5">
+                    <div className="flex flex-col">
+                      {(() => {
+                        const today =
+                          new Date();
+
+                        const expiry =
+                          new Date(
+                            item.end_date
+                          );
+
+                        const diff =
+                          Math.ceil(
+                            (expiry - today) /
+                            (1000 * 60 * 60 * 24)
+                          );
+
+                        if (
+                          diff <= 7 &&
+                          diff > 0
+                        ) {
+                          return (
+                            <span className="text-xs text-orange-500 mt-1">
+                              Expiring Soon
+                            </span>
+                          );
+                        }
+
+                        return null;
+                      })()}
+                    </div>  
                   </td>
 
                   <td className="p-5">
@@ -737,28 +950,48 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
+
+                      {/* Edit */}
                       <button
                         onClick={() =>
-                          handleEditSubscription(
-                            item
-                          )
+                          handleEditSubscription(item)
                         }
                         className="bg-green-100 text-green-600 p-2 rounded-lg"
                       >
                         <Pencil size={18} />
                       </button>
 
+                      {/* Delete */}
                       <button
                         onClick={() =>
-                          deleteSubscription(
-                            item.id
-                          )
+                          deleteSubscription(item.id)
                         }
                         className="bg-red-100 text-red-600 p-2 rounded-lg"
                       >
                         <Trash2 size={18} />
                       </button>
+
+                      {/* Renew */}
+                      <button
+                        onClick={() =>
+                          renewSubscription(item)
+                        }
+                        className="bg-blue-100 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium"
+                      >
+                        Renew
+                      </button>
+
+                      {/* Invoice */}
+                      <button
+                        onClick={() =>
+                          generateInvoice(item)
+                        }
+                        className="bg-purple-100 text-purple-600 px-3 py-2 rounded-lg text-sm font-medium"
+                      >
+                        Invoice
+                      </button>
+
                     </div>
                   </td>
                 </tr>
@@ -860,11 +1093,17 @@ export default function Subscriptions() {
 
             <div className="flex justify-end gap-3 mt-6">
               <button
-                onClick={() =>
-                  setShowModal(
-                    false
-                  )
-                }
+                onClick={() => {
+                  setShowModal(false);
+                  setEditingPlan(null);
+
+                  setFormData({
+                    name: "",
+                    price: "",
+                    branches_limit: "",
+                    members_limit: "",
+                  });
+                }}
                 className="px-5 py-3 rounded-xl border"
               >
                 Cancel
@@ -925,20 +1164,27 @@ export default function Subscriptions() {
               </select>
 
               <select
-                value={subscriptionForm.billing_cycle}
+                value={subscriptionForm.plan_name}
                 onChange={(e) => {
-                  const cycle = e.target.value;
+                  const selectedPlan =
+                    plans.find(
+                      (p) =>
+                        p.name === e.target.value
+                    );
 
-                  const start = subscriptionForm.start_date
-                    ? new Date(
-                        subscriptionForm.start_date
-                      )
-                    : new Date();
+                  const today =
+                    subscriptionForm.start_date
+                      ? new Date(
+                          subscriptionForm.start_date
+                        )
+                      : new Date();
 
                   const expiry =
-                    new Date(start);
+                    new Date(today);
 
-                  switch (cycle) {
+                  switch (
+                    subscriptionForm.billing_cycle
+                  ) {
                     case "monthly":
                       expiry.setMonth(
                         expiry.getMonth() + 1
@@ -965,7 +1211,15 @@ export default function Subscriptions() {
 
                   setSubscriptionForm({
                     ...subscriptionForm,
-                    billing_cycle: cycle,
+                    plan_name:
+                      e.target.value,
+                    amount:
+                      selectedPlan?.price ||
+                      "",
+                    start_date:
+                      today
+                        .toISOString()
+                        .split("T")[0],
                     end_date:
                       expiry
                         .toISOString()
@@ -974,17 +1228,18 @@ export default function Subscriptions() {
                 }}
                 className="w-full border rounded-xl p-4"
               >
-                <option value="monthly">
-                  Monthly
+                <option value="">
+                  Select Plan
                 </option>
 
-                <option value="quarterly">
-                  Quarterly
-                </option>
-
-                <option value="yearly">
-                  Yearly
-                </option>
+                {plans.map((plan) => (
+                  <option
+                    key={plan.id}
+                    value={plan.name}
+                  >
+                    {plan.name}
+                  </option>
+                ))}
               </select>
 
               <select
@@ -1077,6 +1332,43 @@ export default function Subscriptions() {
                   Expired
                 </option>
               </select>
+
+              <div className="flex items-center justify-between border rounded-xl p-4">
+                <div>
+                  <h3 className="font-semibold">
+                    Auto Renewal
+                  </h3>
+
+                  <p className="text-sm text-slate-500">
+                    Automatically renew subscription
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setSubscriptionForm({
+                      ...subscriptionForm,
+                      auto_renew:
+                        !subscriptionForm.auto_renew,
+                    })
+                  }
+                  className={`w-14 h-8 rounded-full transition relative ${
+                    subscriptionForm.auto_renew
+                      ? "bg-green-500"
+                      : "bg-slate-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-6 h-6 bg-white rounded-full transition ${
+                      subscriptionForm.auto_renew
+                        ? "left-7"
+                        : "left-1"
+                    }`}
+                  />
+                </button>
+              </div>
+
             </div>
 
             <div className="flex justify-end gap-3 mt-6">

@@ -605,28 +605,47 @@ export default function Subscriptions() {
       }
     };
 
-    const generateInvoice =
-      (subscription) => {
+    const generateInvoice = (
+        subscription
+      ) => {
 
         const invoiceWindow =
           window.open(
             "",
-            "_blank"
+            "_blank",
+            "width=900,height=700"
           );
 
         invoiceWindow.document.write(`
           <html>
             <head>
-              <title>Invoice</title>
+              <title>
+                Subscription Invoice
+              </title>
 
               <style>
                 body {
-                  font-family: Arial;
+                  font-family: Arial,
+                    sans-serif;
                   padding: 40px;
+                  color: #1e293b;
+                }
+
+                .invoice-box {
+                  max-width: 800px;
+                  margin: auto;
+                  border: 1px solid #e2e8f0;
+                  padding: 30px;
+                  border-radius: 20px;
                 }
 
                 h1 {
-                  color: #16a34a;
+                  margin: 0;
+                  color: #2563eb;
+                }
+
+                .section {
+                  margin-top: 25px;
                 }
 
                 table {
@@ -635,69 +654,152 @@ export default function Subscriptions() {
                   margin-top: 20px;
                 }
 
-                td, th {
-                  border: 1px solid #ccc;
+                table th,
+                table td {
+                  border: 1px solid #ddd;
                   padding: 12px;
+                  text-align: left;
+                }
+
+                table th {
+                  background: #f8fafc;
+                }
+
+                .total {
+                  text-align: right;
+                  margin-top: 20px;
+                  font-size: 22px;
+                  font-weight: bold;
+                }
+
+                .print-btn {
+                  background: #16a34a;
+                  color: white;
+                  border: none;
+                  padding: 12px 20px;
+                  border-radius: 10px;
+                  cursor: pointer;
+                  margin-top: 30px;
+                }
+
+                @media print {
+                  .print-btn {
+                    display: none;
+                  }
                 }
               </style>
             </head>
 
             <body>
-              <h1>Gym Subscription Invoice</h1>
+              <div class="invoice-box">
 
-              <table>
-                <tr>
-                  <th>Gym</th>
-                  <td>
+                <h1>
+                  Gym Subscription Invoice
+                </h1>
+
+                <p>
+                  Invoice Date:
+                  ${new Date().toLocaleDateString()}
+                </p>
+
+                <div class="section">
+                  <h3>
+                    Gym Details
+                  </h3>
+
+                  <p>
+                    <strong>Gym:</strong>
                     ${
                       subscription.gyms
                         ?.gym_name
                     }
-                  </td>
-                </tr>
+                  </p>
 
-                <tr>
-                  <th>Plan</th>
-                  <td>
+                  <p>
+                    <strong>Owner:</strong>
                     ${
-                      subscription.plan_name
+                      subscription.gyms
+                        ?.owner_name
                     }
-                  </td>
-                </tr>
+                  </p>
+                </div>
 
-                <tr>
-                  <th>Amount</th>
-                  <td>
-                    ₹${subscription.amount}
-                  </td>
-                </tr>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        Plan
+                      </th>
+                      <th>
+                        Billing
+                      </th>
+                      <th>
+                        Start
+                      </th>
+                      <th>
+                        Expiry
+                      </th>
+                      <th>
+                        Amount
+                      </th>
+                    </tr>
+                  </thead>
 
-                <tr>
-                  <th>Billing</th>
-                  <td>
-                    ${
-                      subscription.billing_cycle
-                    }
-                  </td>
-                </tr>
+                  <tbody>
+                    <tr>
+                      <td>
+                        ${
+                          subscription.plan_name
+                        }
+                      </td>
 
-                <tr>
-                  <th>Status</th>
-                  <td>
-                    ${
-                      subscription.status
-                    }
-                  </td>
-                </tr>
-              </table>
+                      <td>
+                        ${
+                          subscription.billing_cycle
+                        }
+                      </td>
 
-              <script>
-                window.print()
-              </script>
+                      <td>
+                        ${
+                          subscription.start_date
+                        }
+                      </td>
 
+                      <td>
+                        ${
+                          subscription.end_date
+                        }
+                      </td>
+
+                      <td>
+                        ₹${
+                          subscription.amount
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="total">
+                  Total:
+                  ₹${
+                    subscription.amount
+                  }
+                </div>
+
+                <button
+                  class="print-btn"
+                  onclick="window.print()"
+                >
+                  Print Invoice
+                </button>
+
+              </div>
             </body>
           </html>
         `);
+
+        invoiceWindow.document.close();
       };
 
   return (
@@ -843,6 +945,34 @@ export default function Subscriptions() {
           </h2>
         </div>
 
+        <div className="bg-white p-6 rounded-3xl shadow-sm border">
+          <h3 className="text-slate-500 text-sm">
+            Expiring Soon
+          </h3>
+
+          <h2 className="text-3xl font-bold mt-2 text-orange-500">
+            {
+              subscriptions.filter((s) => {
+                const today = new Date();
+
+                const expiry =
+                  new Date(s.end_date);
+
+                const diffDays =
+                  Math.ceil(
+                    (expiry - today) /
+                    (1000 * 60 * 60 * 24)
+                  );
+
+                return (
+                  diffDays <= 7 &&
+                  diffDays >= 0
+                );
+              }).length
+            }
+          </h2>
+        </div>
+
       </div>
 
       {/* Plans */}
@@ -985,36 +1115,40 @@ export default function Subscriptions() {
                   </td>
 
                   <td className="p-5">
-                    <div className="flex flex-col">
-                      {(() => {
-                        const today =
-                          new Date();
+                    {item.end_date
+                      ? new Date(
+                          item.end_date
+                        ).toLocaleDateString()
+                      : "-"}
 
-                        const expiry =
-                          new Date(
-                            item.end_date
-                          );
+                    {(() => {
+                      const today =
+                        new Date();
 
-                        const diff =
-                          Math.ceil(
-                            (expiry - today) /
-                            (1000 * 60 * 60 * 24)
-                          );
+                      const expiry =
+                        new Date(
+                          item.end_date
+                        );
 
-                        if (
-                          diff <= 7 &&
-                          diff > 0
-                        ) {
-                          return (
-                            <span className="text-xs text-orange-500 mt-1">
-                              Expiring Soon
-                            </span>
-                          );
-                        }
+                      const daysLeft =
+                        Math.ceil(
+                          (expiry - today) /
+                          (1000 * 60 * 60 * 24)
+                        );
 
-                        return null;
-                      })()}
-                    </div>  
+                      if (
+                        daysLeft <= 7 &&
+                        daysLeft >= 0
+                      ) {
+                        return (
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
+                            Expiring Soon
+                          </span>
+                        );
+                      }
+
+                      return null;
+                    })()}
                   </td>
 
                   <td className="p-5">
@@ -1066,10 +1200,10 @@ export default function Subscriptions() {
 
                       {/* Invoice */}
                       <button
+                        className="bg-purple-100 text-purple-600 p-2 rounded-lg"
                         onClick={() =>
                           generateInvoice(item)
                         }
-                        className="bg-purple-100 text-purple-600 px-3 py-2 rounded-lg text-sm font-medium"
                       >
                         Invoice
                       </button>

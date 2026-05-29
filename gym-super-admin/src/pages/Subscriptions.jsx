@@ -130,10 +130,10 @@ export default function Subscriptions() {
           plan_name: "",
           amount: "",
           billing_cycle: "monthly",
-          auto_renew: true,
           start_date: "",
           end_date: "",
           status: "active",
+          auto_renew: false,
         });  
 
       const fetchData = async () => {
@@ -179,11 +179,93 @@ export default function Subscriptions() {
           if (subscriptionsError)
             throw subscriptionsError;
 
+          // AUTO RENEW / AUTO EXPIRE
+          for (const item of subscriptionsData || []) {
+
+            const today = new Date();
+
+            const expiryDate =
+              new Date(item.end_date);
+
+            if (expiryDate < today) {
+
+              if (item.auto_renew) {
+
+                const newExpiry =
+                  new Date(expiryDate);
+
+                switch (
+                  item.billing_cycle
+                ) {
+                  case "monthly":
+                    newExpiry.setMonth(
+                      newExpiry.getMonth() + 1
+                    );
+                    break;
+
+                  case "quarterly":
+                    newExpiry.setMonth(
+                      newExpiry.getMonth() + 3
+                    );
+                    break;
+
+                  case "yearly":
+                    newExpiry.setFullYear(
+                      newExpiry.getFullYear() + 1
+                    );
+                    break;
+
+                  default:
+                    newExpiry.setMonth(
+                      newExpiry.getMonth() + 1
+                    );
+                }
+
+                await supabase
+                  .from("subscriptions")
+                  .update({
+                    start_date:
+                      today
+                        .toISOString()
+                        .split("T")[0],
+
+                    end_date:
+                      newExpiry
+                        .toISOString()
+                        .split("T")[0],
+
+                    status: "active",
+                  })
+                  .eq("id", item.id);
+
+              } else {
+
+                await supabase
+                  .from("subscriptions")
+                  .update({
+                    status: "expired",
+                  })
+                  .eq("id", item.id);
+              }
+            }
+          }
+
           setPlans(plansData || []);
           setGyms(gymsData || []);
+
+          const { data: refreshedSubscriptions } =
+          await supabase
+            .from("subscriptions")
+            .select(`
+              *,
+              gyms (
+                gym_name,
+                owner_name
+              )
+            `);
                 
           const updatedSubscriptions =
-            (subscriptionsData || []).map(
+            (refreshedSubscriptions || []).map(
               (subscription) => {
 
                 const today =
@@ -348,12 +430,12 @@ export default function Subscriptions() {
       setSubscriptionForm({
         gym_id: "",
         plan_name: "",
-        billing_cycle: "monthly",
         amount: "",
+        billing_cycle: "monthly",
         start_date: "",
         end_date: "",
-        status:
-          "active",
+        status: "active",
+        auto_renew: false,
       });
 
       fetchData();
@@ -372,20 +454,20 @@ export default function Subscriptions() {
     );
 
     setSubscriptionForm({
-      gym_id:
-        subscription.gym_id,
-      plan_name:
-        subscription.plan_name,
+      gym_id: subscription.gym_id,
+      plan_name: subscription.plan_name,
+      amount: subscription.amount,
       billing_cycle:
-        subscription.billing_cycle || "monthly",
-      amount:
-        subscription.amount,
+        subscription.billing_cycle ||
+        "monthly",
       start_date:
         subscription.start_date,
       end_date:
         subscription.end_date,
-      status:
-        subscription.status,
+      status: subscription.status,
+      auto_renew:
+        subscription.auto_renew ||
+        false,
     });
 
     setShowSubscriptionModal(
@@ -1385,6 +1467,7 @@ export default function Subscriptions() {
                     start_date: "",
                     end_date: "",
                     status: "active",
+                    auto_renew: false,
                   });
                 }}
                 className="px-5 py-3 rounded-xl border"

@@ -297,6 +297,148 @@ const COLORS = [
   "#dc2626",
 ];  
 
+const generateInvoice =
+  (payment) => {
+
+    const win =
+      window.open(
+        "",
+        "_blank"
+      );
+
+    win.document.write(`
+      <html>
+      <head>
+        <title>
+          Payment Invoice
+        </title>
+
+        <style>
+          body{
+            font-family:Arial;
+            padding:40px;
+            color:#0f172a;
+          }
+
+          .card{
+            border:1px solid #e2e8f0;
+            padding:30px;
+            border-radius:20px;
+            max-width:700px;
+            margin:auto;
+          }
+
+          h1{
+            color:#2563eb;
+          }
+
+          table{
+            width:100%;
+            margin-top:20px;
+            border-collapse:collapse;
+          }
+
+          td,th{
+            border:1px solid #ddd;
+            padding:12px;
+          }
+
+          button{
+            margin-top:20px;
+            background:#16a34a;
+            color:white;
+            border:none;
+            padding:12px 18px;
+            border-radius:10px;
+            cursor:pointer;
+          }
+
+          @media print {
+            button{
+              display:none;
+            }
+          }
+        </style>
+      </head>
+
+      <body>
+
+      <div class="card">
+
+      <h1>
+        Revenue Invoice
+      </h1>
+
+      <p>
+        Date:
+        ${new Date().toLocaleDateString()}
+      </p>
+
+      <table>
+        <tr>
+          <th>Gym</th>
+          <td>
+            ${
+              payment
+                .gyms
+                ?.gym_name
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <th>Owner</th>
+          <td>
+            ${
+              payment
+                .gyms
+                ?.owner_name
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <th>Plan</th>
+          <td>
+            ${
+              payment.plan_name
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <th>Amount</th>
+          <td>
+            ₹${
+              payment.amount
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <th>Status</th>
+          <td>
+            ${
+              payment.payment_status
+            }
+          </td>
+        </tr>
+      </table>
+
+      <button
+        onclick="window.print()"
+      >
+        Print Invoice
+      </button>
+
+      </div>
+      </body>
+      </html>
+    `);
+
+    win.document.close();
+  };
+
   return (
     <div className="space-y-8">
 
@@ -314,12 +456,91 @@ const COLORS = [
         </div>
 
         <div className="flex gap-3">
-          <button className="border border-slate-200 px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-100">
+          <button 
+            onClick={() => {
+              setSearch("");
+              setStatusFilter(
+                "all"
+              );
+            }}
+            className="border border-slate-200 px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-slate-100">
             <Filter size={18} />
-            Filter
+            Reset Filters
           </button>
 
-          <button className="bg-blue-600 text-white px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-blue-700">
+          <button 
+            onClick={() => {
+              const csv =
+                filteredPayments.map(
+                  (p) => ({
+                    Gym:
+                      p.gyms
+                        ?.gym_name,
+
+                    Owner:
+                      p.gyms
+                        ?.owner_name,
+
+                    Plan:
+                      p.plan_name,
+
+                    Amount:
+                      p.amount,
+
+                    Billing:
+                      p.billing_cycle,
+
+                    Status:
+                      p.payment_status,
+
+                    Date:
+                      new Date(
+                        p.created_at
+                      ).toLocaleDateString(),
+                  })
+                );
+
+              const csvContent =
+                [
+                  Object.keys(
+                    csv[0] ||
+                      {}
+                  ).join(","),
+
+                  ...csv.map(
+                    (row) =>
+                      Object.values(
+                        row
+                      ).join(",")
+                  ),
+                ].join("\n");
+
+              const blob =
+                new Blob(
+                  [csvContent],
+                  {
+                    type: "text/csv",
+                  }
+                );
+
+              const url =
+                window.URL.createObjectURL(
+                  blob
+                );
+
+              const a =
+                document.createElement(
+                  "a"
+                );
+
+              a.href = url;
+
+              a.download =
+                "revenue-report.csv";
+
+              a.click();
+            }}
+            className="bg-blue-600 text-white px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-blue-700">
             <Download size={18} />
             Export Report
           </button>
@@ -702,7 +923,13 @@ const COLORS = [
                       </td>
 
                       <td className="p-5">
-                        <button className="bg-blue-100 text-blue-600 p-2 rounded-lg">
+                        <button 
+                          onClick={() =>
+                            generateInvoice(
+                              payment
+                            )
+                          }
+                          className="bg-blue-100 text-blue-600 p-2 rounded-lg hover:bg-blue-200 transition">
                           <FileText
                             size={
                               18

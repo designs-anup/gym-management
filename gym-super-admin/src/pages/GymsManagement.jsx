@@ -2,6 +2,24 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { Pencil, Trash2, Search } from "lucide-react";
 
+import { registerGym } from "../services/registerGym";
+
+const handleSubmit = async () => {
+  const result = await registerGym({
+    gym_name: gymName,
+    owner_name: ownerName,
+    email,
+    phone,
+    city,
+  });
+
+  if (result.success) {
+    alert("Gym registered successfully");
+  } else {
+    alert(result.error);
+  }
+};
+
 export default function GymsManagement() {
   const [gyms, setGyms] = useState([]);
   const [loading, setLoading] = useState(true);

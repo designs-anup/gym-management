@@ -8,6 +8,23 @@ import {
   FileText,
 } from "lucide-react";
 
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -170,6 +187,116 @@ export default function RevenueBilling() {
     },
   ];
 
+const monthlyRevenue = payments.reduce(
+  (acc, item) => {
+    const month = new Date(
+      item.created_at
+    ).toLocaleString(
+      "default",
+      {
+        month: "short",
+      }
+    );
+
+    const existing =
+      acc.find(
+        (m) =>
+          m.month ===
+          month
+      );
+
+    if (existing) {
+      existing.revenue +=
+        Number(
+          item.amount
+        );
+    } else {
+      acc.push({
+        month,
+        revenue:
+          Number(
+            item.amount
+          ),
+      });
+    }
+
+    return acc;
+  },
+  []
+);
+
+const planRevenue =
+  payments.reduce(
+    (acc, item) => {
+      const existing =
+        acc.find(
+          (p) =>
+            p.plan ===
+            item.plan_name
+        );
+
+      if (existing) {
+        existing.amount +=
+          Number(
+            item.amount
+          );
+      } else {
+        acc.push({
+          plan:
+            item.plan_name,
+          amount:
+            Number(
+              item.amount
+            ),
+        });
+      }
+
+      return acc;
+    },
+    []
+  );
+
+const paymentStatusData =
+  [
+    {
+      name: "Paid",
+      value:
+        payments.filter(
+          (p) =>
+            p.payment_status ===
+            "paid"
+        ).length,
+    },
+
+    {
+      name:
+        "Pending",
+      value:
+        payments.filter(
+          (p) =>
+            p.payment_status ===
+            "pending"
+        ).length,
+    },
+
+    {
+      name:
+        "Failed",
+      value:
+        payments.filter(
+          (p) =>
+            p.payment_status ===
+            "failed"
+        ).length,
+    },
+  ];
+
+const COLORS = [
+  "#16a34a",
+  "#eab308",
+  "#dc2626",
+];  
+
   return (
     <div className="space-y-8">
 
@@ -197,6 +324,48 @@ export default function RevenueBilling() {
             Export Report
           </button>
         </div>
+      </div>
+
+      {/* Search/filter section */}
+      <div className="bg-white rounded-3xl border p-5 flex flex-col lg:flex-row gap-4 justify-between">
+
+        <input
+          type="text"
+          placeholder="Search gym..."
+          value={search}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
+          className="border rounded-2xl px-5 py-3 w-full lg:w-80"
+        />
+
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(
+              e.target.value
+            )
+          }
+          className="border rounded-2xl px-5 py-3"
+        >
+          <option value="all">
+            All Status
+          </option>
+
+          <option value="paid">
+            Paid
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="failed">
+            Failed
+          </option>
+        </select>
       </div>
 
       {/* Stats */}
@@ -237,6 +406,160 @@ export default function RevenueBilling() {
           }
         )}
       </div>
+
+      {/* Charts section */}  
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        {/* Revenue Trend */}
+        <div className="bg-white rounded-3xl border p-6 shadow-sm">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Revenue Growth
+          </h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <AreaChart
+              data={
+                monthlyRevenue
+              }
+            >
+              <defs>
+                <linearGradient
+                  id="colorRevenue"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor="#2563eb"
+                    stopOpacity={
+                      0.4
+                    }
+                  />
+
+                  <stop
+                    offset="95%"
+                    stopColor="#2563eb"
+                    stopOpacity={
+                      0
+                    }
+                  />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid
+                strokeDasharray="3 3"
+              />
+
+              <XAxis
+                dataKey="month"
+              />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Area
+                type="monotone"
+                dataKey="revenue"
+                stroke="#2563eb"
+                fillOpacity={1}
+                fill="url(#colorRevenue)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Payment Status */}
+        <div className="bg-white rounded-3xl border p-6 shadow-sm">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Payment Status
+          </h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <PieChart>
+              <Pie
+                data={
+                  paymentStatusData
+                }
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                dataKey="value"
+                label
+              >
+                {paymentStatusData.map(
+                  (
+                    entry,
+                    index
+                  ) => (
+                    <Cell
+                      key={index}
+                      fill={
+                        COLORS[
+                          index
+                        ]
+                      }
+                    />
+                  )
+                )}
+              </Pie>
+
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Revenue by Plan */}
+        <div className="bg-white rounded-3xl border p-6 shadow-sm xl:col-span-2">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Revenue by Plan
+          </h2>
+
+          <ResponsiveContainer
+            width="100%"
+            height={300}
+          >
+            <BarChart
+              data={planRevenue}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+              />
+
+              <XAxis
+                dataKey="plan"
+              />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Bar
+                dataKey="amount"
+                radius={[
+                  10,
+                  10,
+                  0,
+                  0,
+                ]}
+                fill="#2563eb"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
 
       {/* Payment Logs */}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">

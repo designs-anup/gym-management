@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
+
 import {
   ShieldCheck,
   Users,
@@ -67,6 +70,43 @@ const users = [
 ];
 
 export default function UsersRoles() {
+
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select(`
+          *,
+          gyms (
+            gym_name
+          )
+        `)
+        .order("created_at", {
+          ascending: false,
+        });
+
+          console.log("USERS DATA:", data);
+          console.log("USERS ERROR:", error);
+
+      if (error) throw error;
+
+      setUsers(data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -137,53 +177,74 @@ export default function UsersRoles() {
             </thead>
 
             <tbody>
-              {users.map((user, index) => (
-                <tr
-                  key={index}
-                  className="border-b hover:bg-slate-50"
-                >
-                  <td className="p-5 font-semibold">
-                    {user.name}
-                  </td>
-
-                  <td className="p-5">
-                    {user.email}
-                  </td>
-
-                  <td className="p-5">
-                    {user.role}
-                  </td>
-
-                  <td className="p-5">
-                    {user.gym}
-                  </td>
-
-                  <td className="p-5">
-                    <span
-                      className={`px-4 py-2 rounded-full text-sm font-medium
-                      ${
-                        user.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-
-                  <td className="p-5">
-                    <div className="flex gap-3">
-                      <button className="p-2 rounded-xl bg-green-100 text-green-600 hover:bg-green-200">
-                        <Pencil size={18} />
-                      </button>
-
-                      <button className="p-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center p-8"
+                  >
+                    Loading users...
                   </td>
                 </tr>
-              ))}
+              ) : users.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center p-8 text-slate-500"
+                  >
+                    No users found
+                  </td>
+                </tr>
+              ) : (
+                users.map((user, index) => (
+                  <tr
+                    key={index}
+                    className="border-b hover:bg-slate-50"
+                  >
+                    <td className="p-5 font-semibold">
+                      {user.full_name}
+                    </td>
+
+                    <td className="p-5">
+                      {user.email}
+                    </td>
+
+                    <td className="p-5 capitalize">
+                      {user.role}
+                    </td>
+
+                    <td className="p-5">
+                      {user.gyms?.gym_name || "-"}
+                    </td>
+
+                    <td className="p-5">
+                      <span
+                        className={`px-4 py-2 rounded-full text-sm font-medium ${
+                          user.is_active
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {user.is_active
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
+                    </td>
+
+                    <td className="p-5">
+                      <div className="flex gap-3">
+                        <button className="p-2 rounded-xl bg-green-100 text-green-600 hover:bg-green-200">
+                          <Pencil size={18} />
+                        </button>
+
+                        <button className="p-2 rounded-xl bg-red-100 text-red-600 hover:bg-red-200">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

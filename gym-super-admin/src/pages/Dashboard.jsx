@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { supabase } from "../lib/supabase";
+
 import {
   ResponsiveContainer,
   AreaChart,
@@ -21,7 +24,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-const stats = [
+const stats1 = [
   {
     title: "Total Gyms",
     value: "120",
@@ -52,7 +55,7 @@ const stats = [
   },
 ];
 
-const revenueData = [
+const revenueData1 = [
   { month: "Jan", revenue: 120000 },
   { month: "Feb", revenue: 160000 },
   { month: "Mar", revenue: 220000 },
@@ -61,7 +64,7 @@ const revenueData = [
   { month: "Jun", revenue: 420000 },
 ];
 
-const gymGrowthData = [
+const gymGrowthData1 = [
   { month: "Jan", gyms: 20 },
   { month: "Feb", gyms: 32 },
   { month: "Mar", gyms: 48 },
@@ -71,6 +74,227 @@ const gymGrowthData = [
 ];
 
 export default function Dashboard() {
+
+  const [stats, setStats] = useState([]);
+  const [revenueData, setRevenueData] = useState([]);
+  const [gymGrowthData, setGymGrowthData] = useState([]);
+
+  const fetchDashboard =
+    async () => {
+      try {
+
+        const [
+          gymsRes,
+          membersRes,
+          paymentsRes,
+          subscriptionsRes,
+        ] = await Promise.all([
+          supabase
+            .from("gyms")
+            .select("*"),
+
+          supabase
+            .from("members")
+            .select("*"),
+
+          supabase
+            .from(
+              "subscription_payments"
+            )
+            .select("*"),
+
+          supabase
+            .from(
+              "subscriptions"
+            )
+            .select("*"),
+        ]);
+
+        const totalRevenue =
+          paymentsRes.data?.reduce(
+            (sum, item) =>
+              sum +
+              Number(
+                item.amount || 0
+              ),
+            0
+          ) || 0;
+
+        const activeSubscriptions =
+          subscriptionsRes.data?.filter(
+            (s) =>
+              s.status ===
+              "active"
+          ).length || 0;
+
+        setStats([
+          {
+            title:
+              "Total Gyms",
+
+            value:
+              gymsRes.data
+                ?.length || 0,
+
+            growth:
+              "+12%",
+
+            icon:
+              Building2,
+
+            color:
+              "from-blue-500 to-indigo-600",
+          },
+
+          {
+            title:
+              "Members",
+
+            value:
+              membersRes.data
+                ?.length || 0,
+
+            growth:
+              "+18%",
+
+            icon:
+              Users,
+
+            color:
+              "from-green-500 to-emerald-600",
+          },
+
+          {
+            title:
+              "Revenue",
+
+            value:
+              `₹${totalRevenue.toLocaleString()}`,
+
+            growth:
+              "+22%",
+
+            icon:
+              Wallet,
+
+            color:
+              "from-purple-500 to-pink-600",
+          },
+
+          {
+            title:
+              "Active Subs",
+
+            value:
+              activeSubscriptions,
+
+            growth:
+              "+8%",
+
+            icon:
+              Activity,
+
+            color:
+              "from-orange-500 to-red-500",
+          },
+        ]);
+
+        const monthlyRevenue =
+          paymentsRes.data?.reduce(
+            (acc, item) => {
+
+              const month =
+                new Date(
+                  item.created_at
+                ).toLocaleString(
+                  "default",
+                  {
+                    month:
+                      "short",
+                  }
+                );
+
+              const existing =
+                acc.find(
+                  (m) =>
+                    m.month ===
+                    month
+                );
+
+              if (existing) {
+                existing.revenue +=
+                  Number(
+                    item.amount ||
+                      0
+                  );
+              } else {
+                acc.push({
+                  month,
+                  revenue:
+                    Number(
+                      item.amount ||
+                        0
+                    ),
+                });
+              }
+
+              return acc;
+            },
+            []
+          );
+
+        setRevenueData(
+          monthlyRevenue
+        );
+
+        const gymGrowth =
+          gymsRes.data?.reduce(
+            (acc, gym) => {
+
+              const month =
+                new Date(
+                  gym.created_at
+                ).toLocaleString(
+                  "default",
+                  {
+                    month:
+                      "short",
+                  }
+                );
+
+              const existing =
+                acc.find(
+                  (m) =>
+                    m.month ===
+                    month
+                );
+
+              if (existing) {
+                existing.gyms += 1;
+              } else {
+                acc.push({
+                  month,
+                  gyms: 1,
+                });
+              }
+
+              return acc;
+            },
+            []
+          );
+
+        setGymGrowthData(
+          gymGrowth
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
   return (
     <div className="max-w-[1600px] mx-auto space-y-8">
       {/* Hero Section */}

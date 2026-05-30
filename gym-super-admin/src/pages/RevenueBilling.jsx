@@ -193,30 +193,23 @@ const monthlyRevenue = payments.reduce(
       item.created_at
     ).toLocaleString(
       "default",
-      {
-        month: "short",
-      }
+      { month: "short" }
     );
 
-    const existing =
-      acc.find(
-        (m) =>
-          m.month ===
-          month
-      );
+    const existing = acc.find(
+      (m) => m.month === month
+    );
 
     if (existing) {
-      existing.revenue +=
-        Number(
-          item.amount
-        );
+      existing.revenue += Number(
+        item.amount || 0
+      );
     } else {
       acc.push({
         month,
-        revenue:
-          Number(
-            item.amount
-          ),
+        revenue: Number(
+          item.amount || 0
+        ),
       });
     }
 
@@ -256,46 +249,13 @@ const planRevenue =
     []
   );
 
-const paymentStatusData =
-  [
-    {
-      name: "Paid",
-      value:
-        payments.filter(
-          (p) =>
-            p.payment_status ===
-            "paid"
-        ).length,
-    },
-
-    {
-      name:
-        "Pending",
-      value:
-        payments.filter(
-          (p) =>
-            p.payment_status ===
-            "pending"
-        ).length,
-    },
-
-    {
-      name:
-        "Failed",
-      value:
-        payments.filter(
-          (p) =>
-            p.payment_status ===
-            "failed"
-        ).length,
-    },
-  ];
-
 const COLORS = [
+  "#2563eb",
   "#16a34a",
-  "#eab308",
+  "#f59e0b",
   "#dc2626",
-];  
+  "#9333ea",
+];
 
 const generateInvoice =
   (payment) => {
@@ -439,6 +399,86 @@ const generateInvoice =
     win.document.close();
   };
 
+  const planDistribution =
+  payments.reduce(
+    (acc, item) => {
+
+      const existing =
+        acc.find(
+          (x) =>
+            x.name ===
+            item.plan_name
+        );
+
+      if (existing) {
+        existing.value +=
+          1;
+      } else {
+        acc.push({
+          name:
+            item.plan_name,
+          value: 1,
+        });
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  const billingCycleData =
+  payments.reduce(
+    (acc, item) => {
+
+      const existing =
+        acc.find(
+          (x) =>
+            x.name ===
+            item.billing_cycle
+        );
+
+      if (existing) {
+        existing.count +=
+          1;
+      } else {
+        acc.push({
+          name:
+            item.billing_cycle,
+          count: 1,
+        });
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  const paymentStatusData = [
+  {
+    name: "Paid",
+    value: payments.filter(
+      (p) =>
+        p.payment_status === "paid"
+    ).length,
+  },
+  {
+    name: "Pending",
+    value: payments.filter(
+      (p) =>
+        p.payment_status ===
+        "pending"
+    ).length,
+  },
+  {
+    name: "Failed",
+    value: payments.filter(
+      (p) =>
+        p.payment_status ===
+        "failed"
+    ).length,
+  },
+];
+
   return (
     <div className="space-y-8">
 
@@ -470,6 +510,7 @@ const generateInvoice =
 
           <button 
             onClick={() => {
+
               const csv =
                 filteredPayments.map(
                   (p) => ({
@@ -500,11 +541,18 @@ const generateInvoice =
                   })
                 );
 
+              // FIX: prevent crash
+              if (!csv.length) {
+                alert(
+                  "No data to export"
+                );
+                return;
+              }
+
               const csvContent =
                 [
                   Object.keys(
-                    csv[0] ||
-                      {}
+                    csv[0]
                   ).join(","),
 
                   ...csv.map(
@@ -519,7 +567,8 @@ const generateInvoice =
                 new Blob(
                   [csvContent],
                   {
-                    type: "text/csv",
+                    type:
+                      "text/csv",
                   }
                 );
 
@@ -674,7 +723,8 @@ const generateInvoice =
               </defs>
 
               <CartesianGrid
-                strokeDasharray="3 3"
+                stroke="#e2e8f0"
+                vertical={false}
               />
 
               <XAxis
@@ -683,7 +733,12 @@ const generateInvoice =
 
               <YAxis />
 
-              <Tooltip />
+              <Tooltip
+                formatter={(value) => [
+                  `₹${value}`,
+                  "Revenue",
+                ]}
+              />
 
               <Area
                 type="monotone"
@@ -781,6 +836,94 @@ const generateInvoice =
         </div>
       </div>
 
+      {/* 4 chart datasets */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        {/* Plans Distribution */}
+        <div className="bg-white rounded-3xl border p-6 shadow-sm">
+
+          <h2 className="text-xl font-bold mb-6">
+            Plan Distribution
+          </h2>
+
+          <div className="h-[320px]">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={
+                    planDistribution
+                  }
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={
+                    100
+                  }
+                  label
+                >
+                  {planDistribution.map(
+                    (
+                      entry,
+                      index
+                    ) => (
+                      <Cell
+                        key={index}
+                        fill={
+                          COLORS[
+                            index % COLORS.length
+                          ]
+                        }
+                      />
+                    )
+                  )}
+                </Pie>
+
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Billing Cycle */}
+        <div className="bg-white rounded-3xl border p-6 shadow-sm">
+
+          <h2 className="text-xl font-bold mb-6">
+            Billing Cycles
+          </h2>
+
+          <div className="h-[320px]">
+            <ResponsiveContainer>
+              <BarChart
+                data={
+                  billingCycleData
+                }
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                />
+
+                <XAxis
+                  dataKey="name"
+                />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Bar
+                  dataKey="count"
+                  radius={[
+                    10,
+                    10,
+                    0,
+                    0,
+                  ]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+      </div>
 
       {/* Payment Logs */}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
@@ -849,7 +992,22 @@ const generateInvoice =
                     colSpan="8"
                     className="text-center p-8 text-slate-500"
                   >
-                    No payments found
+                    <div className="flex flex-col items-center justify-center py-14">
+                      <Wallet
+                        size={50}
+                        className="text-slate-300"
+                      />
+
+                      <h3 className="mt-4 text-lg font-semibold text-slate-700">
+                        No Payments Found
+                      </h3>
+
+                      <p className="text-slate-500">
+                        Revenue data will appear
+                        here once subscriptions
+                        are paid.
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (

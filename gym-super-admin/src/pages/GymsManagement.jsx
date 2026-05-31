@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Pencil, Trash2, Search } from "lucide-react";
+import { Pencil, Trash2, Search, Mail, } from "lucide-react";
 import { registerGym } from "../services/registerGym";
+import { resendCredentials } from "../services/resendCredentials";
 
 export default function GymsManagement() {
   const [gyms, setGyms] = useState([]);
@@ -119,6 +120,24 @@ export default function GymsManagement() {
           search.toLowerCase()
         )
     );
+
+  const handleResendEmail =
+  async (gym) => {
+    const result =
+      await resendCredentials(
+        gym
+      );
+
+    if (result.success) {
+      alert(
+        "Credentials email sent successfully"
+      );
+    } else {
+      alert(
+        result.error
+      );
+    }
+  };
 
   return (
     <div className="p-6">
@@ -312,6 +331,18 @@ export default function GymsManagement() {
 
                       <td>
                         <div className="flex gap-3">
+
+                          <button
+                            onClick={() =>
+                              handleResendEmail(
+                                gym
+                              )
+                            }
+                            className="p-2 rounded-lg hover:bg-green-100 transition"
+                          >
+                            <Mail className="w-4 h-4 text-green-600" />
+                          </button>
+
                           <button className="p-2 rounded-lg hover:bg-blue-100 transition">
                             <Pencil className="w-4 h-4 text-blue-600" />
                           </button>

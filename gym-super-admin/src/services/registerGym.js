@@ -1,13 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
   import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
-);
-
-const resend = new Resend(
-  import.meta.env.VITE_RESEND_API_KEY
 );
 
 const generatePassword = () => {
@@ -59,41 +54,71 @@ export const registerGym = async (
     if (gymError) throw gymError;
 
     // 3. Create user record
-    const { error: userError } =
+    const { data: existingUser } =
       await supabase
         .from("users")
-        .insert([
-          {
-            id: userId,
-            gym_id: gym.id,
-            full_name:
-              gymData.owner_name,
-            email: gymData.email,
-            role: "gym owner",
-            is_active: true,
-          },
-        ]);
+        .select("id")
+        .eq("id", userId)
+        .single();
 
-    if (userError) throw userError;
+    if (!existingUser) {
+      const { error: userError } =
+        await supabase
+          .from("users")
+          .insert([
+            {
+              id: userId,
+              gym_id: gym.id,
+              full_name:
+                gymData.owner_name,
+              email: gymData.email,
+              role: "gym owner",
+              is_active: true,
+            },
+          ]);
+
+      if (userError)
+        throw userError;
+    }
 
     // 4. Send login email
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: gymData.email,
-      subject:
-        "Gym SaaS Login Credentials",
-      html: `
-        <h2>Welcome to Gym SaaS</h2>
-        <p>Hello ${gymData.owner_name}</p>
+    try {
+      const response =
+        await fetch(
+          "http://localhost:5000/send-email",
+          {
+            method: "POST",
 
-        <p>Your gym account has been created.</p>
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
 
-        <p><strong>Email:</strong> ${gymData.email}</p>
-        <p><strong>Password:</strong> ${password}</p>
+            body: JSON.stringify({
+              email:
+                gymData.email,
 
-        <p>Please login and change your password.</p>
-      `,
-    });
+              owner_name:
+                gymData.owner_name,
+
+              password,
+            }),
+          }
+        );
+
+      const result =
+        await response.json();
+
+      console.log(
+        "EMAIL RESULT:",
+        result
+      );
+    } catch (error) {
+      console.error(
+        "EMAIL FAILED:",
+        error
+      );
+    }
 
     return {
       success: true,

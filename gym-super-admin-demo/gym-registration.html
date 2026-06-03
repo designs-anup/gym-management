@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Gym Registration & Management</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:#f4f7fc;
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:270px;
+height:100vh;
+background:linear-gradient(180deg,#0f172a,#1e3a8a);
+color:#fff;
+padding:25px 20px;
+position:fixed;
+overflow-y:auto;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+margin-bottom:35px;
+text-align:center;
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+.sidebar ul li{
+margin-bottom:12px;
+}
+
+.sidebar ul li a{
+text-decoration:none;
+color:#fff;
+display:flex;
+align-items:center;
+gap:12px;
+padding:14px;
+border-radius:12px;
+transition:.3s;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li.active a{
+background:rgba(255,255,255,0.15);
+}
+
+.sidebar i{
+width:22px;
+}
+
+/* MAIN */
+
+.main{
+margin-left:270px;
+width:calc(100% - 270px);
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.page-title{
+font-size:30px;
+font-weight:bold;
+color:#111827;
+}
+
+.admin-profile{
+display:flex;
+align-items:center;
+gap:12px;
+background:#fff;
+padding:10px 20px;
+border-radius:14px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.card{
+background:#fff;
+border-radius:20px;
+padding:30px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+
+.card-title{
+font-size:24px;
+font-weight:700;
+margin-bottom:20px;
+color:#1e3a8a;
+}
+
+/* FORM */
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.input-group{
+display:flex;
+flex-direction:column;
+}
+
+.input-group label{
+margin-bottom:8px;
+font-weight:600;
+color:#374151;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea{
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:12px;
+outline:none;
+font-size:15px;
+}
+
+.input-group textarea{
+resize:none;
+height:100px;
+}
+
+.logo-upload{
+border:2px dashed #cbd5e1;
+padding:30px;
+text-align:center;
+border-radius:15px;
+cursor:pointer;
+background:#f8fafc;
+}
+
+.submit-btn{
+margin-top:25px;
+background:linear-gradient(90deg,#2563eb,#1d4ed8);
+border:none;
+color:#fff;
+padding:15px 30px;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+font-weight:bold;
+transition:.3s;
+}
+
+.submit-btn:hover{
+transform:translateY(-2px);
+}
+
+/* FEATURES */
+
+.feature-box{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
+
+.feature{
+background:#eff6ff;
+padding:18px;
+border-radius:15px;
+font-weight:600;
+display:flex;
+align-items:center;
+gap:12px;
+color:#1e40af;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+table th{
+background:#1e3a8a;
+color:#fff;
+padding:15px;
+text-align:left;
+}
+
+table td{
+padding:15px;
+border-bottom:1px solid #eee;
+}
+
+.status{
+padding:8px 14px;
+border-radius:30px;
+font-size:13px;
+font-weight:bold;
+}
+
+.active{
+background:#dcfce7;
+color:#15803d;
+}
+
+.pending{
+background:#fef3c7;
+color:#b45309;
+}
+
+.suspended{
+background:#fee2e2;
+color:#dc2626;
+}
+
+.btn-group{
+display:flex;
+gap:10px;
+}
+
+.btn{
+border:none;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+font-size:14px;
+}
+
+.edit{
+background:#2563eb;
+color:#fff;
+}
+
+.approve{
+background:#16a34a;
+color:#fff;
+}
+
+.delete{
+background:#dc2626;
+color:#fff;
+}
+
+@media(max-width:900px){
+
+.sidebar{
+width:80px;
+}
+
+.sidebar .text{
+display:none;
+}
+
+.main{
+margin-left:80px;
+width:calc(100% - 80px);
+}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+<i class="fas fa-dumbbell"></i> Gym SaaS
+</div>
+
+<ul>
+<li class="active">
+<a href="#">
+<i class="fas fa-building"></i>
+<span class="text">Gyms Management</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-credit-card"></i>
+<span class="text">Subscriptions</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-chart-line"></i>
+<span class="text">Analytics</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-users-cog"></i>
+<span class="text">Roles</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-bullhorn"></i>
+<span class="text">Announcements</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-cog"></i>
+<span class="text">Settings</span>
+</a>
+</li>
+</ul>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="topbar">
+<h1 class="page-title">
+Gym Registration & Management
+</h1>
+
+<div class="admin-profile">
+<i class="fas fa-user-circle fa-2x"></i>
+<span>Super Admin</span>
+</div>
+</div>
+
+<!-- FEATURES -->
+
+<div class="card">
+<div class="card-title">
+Platform Features
+</div>
+
+<div class="feature-box">
+
+<div class="feature">
+<i class="fas fa-plus-circle"></i>
+Add New Gym
+</div>
+
+<div class="feature">
+<i class="fas fa-check-circle"></i>
+Approve Registration
+</div>
+
+<div class="feature">
+<i class="fas fa-edit"></i>
+Edit Gym Info
+</div>
+
+<div class="feature">
+<i class="fas fa-ban"></i>
+Suspend Gym
+</div>
+
+<div class="feature">
+<i class="fas fa-trash"></i>
+Delete Gym
+</div>
+
+<div class="feature">
+<i class="fas fa-crown"></i>
+Assign Plans
+</div>
+
+</div>
+</div>
+
+<!-- FORM -->
+
+<div class="card">
+
+<div class="card-title">
+Register New Gym
+</div>
+
+<form>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>Gym Name</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>Owner Name</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input type="email">
+</div>
+
+<div class="input-group">
+<label>Phone Number</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>City</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>State</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>Country</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>GST Number</label>
+<input type="text">
+</div>
+
+<div class="input-group">
+<label>Subscription Plan</label>
+<select>
+<option>Basic</option>
+<option>Standard</option>
+<option>Premium</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Branches</label>
+<input type="number">
+</div>
+
+<div class="input-group">
+<label>Time Zone</label>
+<select>
+<option>Asia/Kolkata</option>
+<option>UTC</option>
+<option>US/Eastern</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Currency</label>
+<select>
+<option>INR</option>
+<option>USD</option>
+<option>EUR</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Status</label>
+<select>
+<option>Pending Approval</option>
+<option>Active</option>
+<option>Suspended</option>
+<option>Trial Expired</option>
+<option>Inactive</option>
+<option>Blocked</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Address</label>
+<textarea></textarea>
+</div>
+
+<div class="input-group">
+<label>Gym Logo</label>
+
+<div class="logo-upload">
+<i class="fas fa-cloud-upload-alt fa-2x"></i>
+<p>Upload Logo</p>
+</div>
+</div>
+
+</div>
+
+<button class="submit-btn">
+Register Gym
+</button>
+
+</form>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="card">
+
+<div class="card-title">
+Registered Gyms
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Gym</th>
+<th>Owner</th>
+<th>Plan</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Iron Fitness</td>
+<td>John Doe</td>
+<td>Premium</td>
+<td>
+<span class="status active">
+Active
+</span>
+</td>
+
+<td>
+<div class="btn-group">
+<button class="btn edit">Edit</button>
+<button class="btn delete">Suspend</button>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Power Gym</td>
+<td>Alex Smith</td>
+<td>Basic</td>
+<td>
+<span class="status pending">
+Pending
+</span>
+</td>
+
+<td>
+<div class="btn-group">
+<button class="btn approve">
+Approve
+</button>
+<button class="btn edit">
+Edit
+</button>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Elite Fitness</td>
+<td>Rahul Sharma</td>
+<td>Standard</td>
+<td>
+<span class="status suspended">
+Suspended
+</span>
+</td>
+
+<td>
+<div class="btn-group">
+<button class="btn edit">
+Reactivate
+</button>
+<button class="btn delete">
+Delete
+</button>
+</div>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+<!--
+Below is a complete static HTML page (gym-registration.html) for Super Admin → Gym Registration & Management with:
+
+Premium admin dashboard UI
+Sidebar navigation
+Gym registration form
+Gym status dropdown
+Subscription plan selection
+Gym logo upload UI
+Registered gyms table
+Action buttons (Approve, Edit, Suspend, Delete)
+Responsive layout
+Clean modern styling
+-->

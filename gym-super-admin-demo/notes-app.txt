@@ -1,0 +1,324 @@
+prompt : 
+
+System Type Create a multi-tenant SaaS Gym Management System where: 1. Super Admin The Super Admin controls the entire platform and can: Register/manage multiple gyms Approve or suspend gyms Manage subscriptions/plans View all gym analytics Revenue monitoring Platform settings Role management Security & backups View all gym performance Send announcements to gym owners
+
+AI Response :
+
+## 1. Super Admin Module (Platform Owner)
+
+The **Super Admin** is the highest-level administrator of the **Multi-Tenant SaaS Gym Management System**. The Super Admin manages the **entire platform**, including all registered gyms, subscriptions, analytics, revenue, security, and communication.
+
+### Responsibilities
+
+The Super Admin can:
+
+* Register and manage multiple gyms
+* Approve, suspend, or deactivate gyms
+* Manage subscription plans
+* Monitor platform-wide analytics
+* Revenue tracking
+* Configure system settings
+* Manage user roles & permissions
+* Handle security and backups
+* View performance of all gyms
+* Send announcements to gym owners
+
+---
+
+## Core Features
+
+### 1. Gym Registration & Management
+
+The Super Admin can onboard unlimited gyms into the platform.
+
+#### Features
+
+* Add new gyms manually
+* Approve self-registered gyms
+* Edit gym information
+* Suspend or reactivate gyms
+* Delete inactive gyms
+* Assign subscription plans
+* Manage gym status
+
+#### Gym Information Fields
+
+```text
+Gym Name
+Owner Name
+Email
+Phone Number
+Address
+City
+State
+Country
+GST Number (Optional)
+Gym Logo
+Subscription Plan
+Number of Branches
+Time Zone
+Currency
+Status
+```
+
+#### Gym Status Types
+
+```text
+Pending Approval
+Active
+Suspended
+Trial Expired
+Inactive
+Blocked
+```
+
+---
+
+### 2. Subscription & Plan Management
+
+The Super Admin can manage SaaS subscription plans for gym owners.
+
+#### Features
+
+* Create plans
+* Edit plans
+* Upgrade/downgrade gym plans
+* Trial period setup
+* Expiry tracking
+* Subscription renewals
+
+#### Example Plans
+
+| Plan     | Monthly Price | Features              |
+| -------- | ------------- | --------------------- |
+| Basic    | ₹999          | 1 Branch, 500 Members |
+| Standard | ₹2499         | 3 Branches            |
+| Premium  | ₹4999         | Unlimited Features    |
+
+#### Billing Options
+
+```text
+Monthly
+Quarterly
+Yearly
+Custom Enterprise Plan
+```
+
+---
+
+### 3. Multi-Gym Dashboard
+
+Super Admin dashboard should provide platform-wide analytics.
+
+#### Dashboard Widgets
+
+```text
+Total Registered Gyms
+Active Gyms
+Suspended Gyms
+Trial Gyms
+Total Members
+Total Trainers
+Total Revenue
+Monthly Revenue
+Pending Payments
+Membership Expiries
+```
+
+#### Charts & Analytics
+
+* Revenue growth graph
+* Gym growth trend
+* Monthly subscriptions
+* Attendance analytics
+* Top-performing gyms
+* Churn rate analysis
+
+---
+
+### 4. Revenue Monitoring
+
+Super Admin can track platform earnings.
+
+#### Features
+
+* Subscription revenue
+* Monthly earnings
+* Failed payments
+* Payment logs
+* Commission reports
+* Tax reporting
+
+#### Revenue Reports
+
+```text
+Daily Revenue
+Monthly Revenue
+Yearly Revenue
+Plan-Based Revenue
+Gym-Wise Revenue
+```
+
+---
+
+### 5. Platform Settings
+
+Manage global SaaS configurations.
+
+#### Settings Include
+
+```text
+Platform Name
+Brand Logo
+Theme Settings
+Currency
+Timezone
+Tax Rules
+SMTP Email Setup
+SMS Gateway
+Payment Gateway Keys
+Storage Settings
+```
+
+---
+
+### 6. Role Management
+
+Super Admin can create and control access permissions.
+
+#### Roles
+
+```text
+Super Admin
+Gym Owner
+Manager
+Trainer
+Receptionist
+Staff
+Member
+```
+
+#### Permissions Example
+
+| Role         | Access               |
+| ------------ | -------------------- |
+| Gym Owner    | Full Gym Access      |
+| Trainer      | Workout + Members    |
+| Receptionist | Billing + Attendance |
+| Member       | Personal Dashboard   |
+
+---
+
+### 7. Security & Backup
+
+Super Admin ensures platform security.
+
+#### Features
+
+* Two-factor authentication (2FA)
+* Audit logs
+* Login history
+* Device tracking
+* Auto database backup
+* Restore backup
+* Session management
+* Failed login alerts
+
+---
+
+### 8. Gym Performance Monitoring
+
+Monitor all gyms from one dashboard.
+
+#### Metrics
+
+```text
+Member Count
+Revenue
+Attendance Rate
+Trainer Performance
+Membership Renewals
+Pending Payments
+Class Engagement
+```
+
+#### Filters
+
+```text
+By City
+By Subscription Plan
+By Revenue
+By Growth
+By Status
+```
+
+---
+
+### 9. Announcements & Communication
+
+Super Admin can send announcements to gym owners.
+
+#### Communication Channels
+
+```text
+Email
+SMS
+In-App Notifications
+Push Notifications
+```
+
+#### Use Cases
+
+* Subscription expiry reminder
+* Platform maintenance alert
+* New feature release
+* Billing updates
+* Promotional campaigns
+
+---
+
+## Super Admin Sidebar Navigation
+
+```text
+Dashboard
+Gyms Management
+Subscriptions
+Revenue & Billing
+Analytics
+Gym Performance
+Users & Roles
+Announcements
+Settings
+Security & Backup
+Support Center
+Logs & Activity
+```
+
+---
+
+## Database Tables for Super Admin
+
+```sql
+platform_admins
+gyms
+subscriptions
+subscription_plans
+payments
+announcements
+platform_settings
+roles
+permissions
+activity_logs
+audit_logs
+backups
+```
+
+### Multi-Tenant Rule
+
+Every gym record must be isolated using:
+
+```sql
+gym_id UUID
+```
+
+with **Supabase Row Level Security (RLS)** enabled to ensure data separation across gyms.

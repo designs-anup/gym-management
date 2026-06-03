@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
+
+<title>Role Management</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f7fc;
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:270px;
+height:100vh;
+background:
+linear-gradient(180deg,#0f172a,#1e3a8a);
+color:#fff;
+padding:25px 20px;
+position:fixed;
+overflow-y:auto;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+text-align:center;
+margin-bottom:35px;
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+.sidebar ul li{
+margin-bottom:12px;
+}
+
+.sidebar ul li a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:14px;
+border-radius:14px;
+text-decoration:none;
+color:#fff;
+transition:.3s;
+}
+
+.sidebar ul li.active a,
+.sidebar ul li a:hover{
+background:rgba(255,255,255,.15);
+}
+
+/* MAIN */
+
+.main{
+margin-left:270px;
+width:calc(100% - 270px);
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.page-title{
+font-size:32px;
+font-weight:bold;
+color:#111827;
+}
+
+.profile{
+background:#fff;
+padding:12px 20px;
+border-radius:15px;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+/* CARD */
+
+.card{
+background:#fff;
+padding:30px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+
+.card-title{
+font-size:24px;
+font-weight:bold;
+margin-bottom:20px;
+color:#1e3a8a;
+}
+
+/* ROLE CARDS */
+
+.role-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.role-card{
+background:#eff6ff;
+padding:25px;
+border-radius:20px;
+text-align:center;
+transition:.3s;
+}
+
+.role-card:hover{
+transform:translateY(-5px);
+background:#dbeafe;
+}
+
+.role-icon{
+font-size:40px;
+margin-bottom:15px;
+color:#2563eb;
+}
+
+.role-name{
+font-size:20px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.role-access{
+color:#4b5563;
+font-size:14px;
+}
+
+/* FORM */
+
+.form-grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.input-group{
+display:flex;
+flex-direction:column;
+}
+
+.input-group label{
+font-weight:600;
+margin-bottom:8px;
+}
+
+.input-group input,
+.input-group select{
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:12px;
+outline:none;
+}
+
+/* BUTTON */
+
+.btn{
+border:none;
+padding:14px 22px;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+transition:.3s;
+}
+
+.primary{
+background:
+linear-gradient(90deg,#2563eb,#1d4ed8);
+color:#fff;
+}
+
+.danger{
+background:#dc2626;
+color:#fff;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+table th{
+background:#1e3a8a;
+color:#fff;
+padding:15px;
+text-align:left;
+}
+
+table td{
+padding:15px;
+border-bottom:1px solid #eee;
+}
+
+/* SWITCH */
+
+.switch{
+position:relative;
+display:inline-block;
+width:50px;
+height:24px;
+}
+
+.switch input{
+display:none;
+}
+
+.slider{
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#ccc;
+border-radius:30px;
+transition:.3s;
+}
+
+.slider:before{
+content:"";
+position:absolute;
+height:18px;
+width:18px;
+left:3px;
+bottom:3px;
+background:white;
+border-radius:50%;
+transition:.3s;
+}
+
+input:checked + .slider{
+background:#2563eb;
+}
+
+input:checked + .slider:before{
+transform:translateX(26px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.sidebar{
+width:80px;
+}
+
+.sidebar span{
+display:none;
+}
+
+.main{
+margin-left:80px;
+width:calc(100% - 80px);
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+<i class="fas fa-dumbbell"></i>
+Gym SaaS
+</div>
+
+<ul>
+
+<li>
+<a href="#">
+<i class="fas fa-chart-pie"></i>
+<span>Dashboard</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-building"></i>
+<span>Gyms</span>
+</a>
+</li>
+
+<li class="active">
+<a href="#">
+<i class="fas fa-users-cog"></i>
+<span>Role Management</span>
+</a>
+</li>
+
+<li>
+<a href="#">
+<i class="fas fa-cog"></i>
+<span>Settings</span>
+</a>
+</li>
+
+</ul>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="topbar">
+
+<h1 class="page-title">
+Role Management
+</h1>
+
+<div class="profile">
+<i class="fas fa-user-circle fa-2x"></i>
+<span>Super Admin</span>
+</div>
+
+</div>
+
+<!-- ROLE CARDS -->
+
+<div class="card">
+
+<div class="card-title">
+Available Roles
+</div>
+
+<div class="role-grid">
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-user-shield"></i>
+</div>
+<div class="role-name">
+Super Admin
+</div>
+<div class="role-access">
+Full Platform Access
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-building"></i>
+</div>
+<div class="role-name">
+Gym Owner
+</div>
+<div class="role-access">
+Full Gym Access
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-user-tie"></i>
+</div>
+<div class="role-name">
+Manager
+</div>
+<div class="role-access">
+Gym Operations
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-dumbbell"></i>
+</div>
+<div class="role-name">
+Trainer
+</div>
+<div class="role-access">
+Workout + Members
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-cash-register"></i>
+</div>
+<div class="role-name">
+Receptionist
+</div>
+<div class="role-access">
+Billing + Attendance
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-user"></i>
+</div>
+<div class="role-name">
+Staff
+</div>
+<div class="role-access">
+Limited Access
+</div>
+</div>
+
+<div class="role-card">
+<div class="role-icon">
+<i class="fas fa-id-card"></i>
+</div>
+<div class="role-name">
+Member
+</div>
+<div class="role-access">
+Personal Dashboard
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- CREATE ROLE -->
+
+<div class="card">
+
+<div class="card-title">
+Create / Edit Role
+</div>
+
+<div class="form-grid">
+
+<div class="input-group">
+<label>Role Name</label>
+<input
+type="text"
+placeholder="Enter Role Name"
+/>
+</div>
+
+<div class="input-group">
+<label>Access Type</label>
+<select>
+<option>Full Access</option>
+<option>Limited Access</option>
+<option>Custom Permission</option>
+</select>
+</div>
+
+</div>
+
+<br>
+
+<button class="btn primary">
+Save Role
+</button>
+
+</div>
+
+<!-- PERMISSION TABLE -->
+
+<div class="card">
+
+<div class="card-title">
+Permission Matrix
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Role</th>
+<th>Dashboard</th>
+<th>Members</th>
+<th>Billing</th>
+<th>Attendance</th>
+<th>Workouts</th>
+<th>Settings</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Gym Owner</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+<td>
+<label class="switch">
+<input checked type="checkbox">
+<span class="slider"></span>
+</label>
+</td>
+
+</tr>
+
+<tr>
+<td>Trainer</td>
+
+<td>✔</td>
+<td>✔</td>
+<td>✖</td>
+<td>✖</td>
+<td>✔</td>
+<td>✖</td>
+
+</tr>
+
+<tr>
+<td>Receptionist</td>
+
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td>✖</td>
+<td>✖</td>
+
+</tr>
+
+<tr>
+<td>Member</td>
+
+<td>✔</td>
+<td>✖</td>
+<td>✖</td>
+<td>✔</td>
+<td>✔</td>
+<td>✖</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- USER ASSIGNMENT -->
+
+<div class="card">
+
+<div class="card-title">
+Assigned Users
+</div>
+
+<table>
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Role</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Rahul Sharma</td>
+<td>rahul@gmail.com</td>
+<td>Gym Owner</td>
+<td>
+<button class="btn primary">
+Edit
+</button>
+
+<button class="btn danger">
+Delete
+</button>
+</td>
+</tr>
+
+<tr>
+<td>John Smith</td>
+<td>john@gmail.com</td>
+<td>Trainer</td>
+<td>
+<button class="btn primary">
+Edit
+</button>
+
+<button class="btn danger">
+Delete
+</button>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+<!--
+Below is a complete static HTML page (role-management.html) for Super Admin → Role Management with:
+
+Included Features
+
+✅ Create new roles
+✅ Edit/Delete roles
+✅ Role-based access permissions
+✅ Permission matrix table
+✅ Toggle access switches
+✅ Role cards
+✅ User assignment table
+✅ Premium SaaS admin UI
+✅ Responsive layout
+-->

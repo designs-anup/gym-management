@@ -1,0 +1,555 @@
+Staring prompt : create a prompt for a Gym Management where multiple gym can be registered by super admin. Individual gym owner have the access to manage refer attachment. This app should be react as front end & supabase or any free backend service.
+
+Here’s a detailed **AI prompt/specification** you can use to generate or build a **Multi-Gym SaaS Gym Management System** (inspired by your attached flow/UI), with **Super Admin → Gym Owner → Staff/Trainer/Member hierarchy**, **React frontend**, and **Supabase/free backend**.
+
+---
+
+## Prompt: Multi-Gym Management SaaS Application
+
+**Build a modern, scalable, multi-tenant Gym Management System (SaaS platform)** where **multiple gyms can register under one platform** and be managed independently.
+
+The platform must support:
+
+### Tech Stack
+
+* **Frontend:** React.js + Vite
+* **UI Framework:** Tailwind CSS + ShadCN UI
+* **Icons:** Lucide React / Font Awesome
+* **State Management:** Zustand or Redux Toolkit
+* **Backend:** Supabase (preferred) or Firebase (free tier alternative)
+* **Authentication:** Supabase Auth (Email, Google Login)
+* **Database:** PostgreSQL (Supabase)
+* **Storage:** Supabase Storage
+* **Realtime Features:** Supabase Realtime
+* **Charts & Analytics:** Recharts
+* **Notifications:** Email + SMS integration (free-ready architecture)
+* **Deployment:** Vercel (frontend) + Supabase backend
+
+---
+
+# System Type
+
+Create a **multi-tenant SaaS Gym Management System** where:
+
+### 1. Super Admin
+
+The **Super Admin controls the entire platform** and can:
+
+* Register/manage multiple gyms
+* Approve or suspend gyms
+* Manage subscriptions/plans
+* View all gym analytics
+* Revenue monitoring
+* Platform settings
+* Role management
+* Security & backups
+* View all gym performance
+* Send announcements to gym owners
+
+---
+
+### 2. Gym Owner (Tenant Admin)
+
+Each registered gym gets its **own isolated dashboard and database access scope**.
+
+Gym Owners can manage only their gym:
+
+#### Dashboard
+
+* Revenue overview
+* Active members
+* Attendance
+* Trainers
+* Equipment status
+* Membership renewals
+* Notifications
+* Class occupancy
+* Analytics charts
+
+---
+
+# Multi-Tenant Architecture
+
+Each gym should have:
+
+```sql
+gym_id
+```
+
+All records must be tenant-scoped:
+
+```sql
+members
+trainers
+attendance
+payments
+classes
+workouts
+equipment
+notifications
+staff
+```
+
+Every table must include:
+
+```sql
+gym_id UUID
+```
+
+to isolate gym data.
+
+**Security Rule:**
+
+Gym owners can access **only their own gym data**.
+
+Implement **Supabase Row Level Security (RLS)**.
+
+Example:
+
+```sql
+gym_id = auth.jwt()->>'gym_id'
+```
+
+No gym owner should ever see another gym’s data.
+
+---
+
+# User Roles
+
+Implement role-based access:
+
+### Super Admin
+
+Full platform access.
+
+### Gym Owner
+
+Full access to own gym.
+
+### Staff
+
+Limited operational access.
+
+### Trainer
+
+Workout & member training access.
+
+### Receptionist
+
+Attendance + billing only.
+
+### Member
+
+Member panel access.
+
+---
+
+# Authentication System
+
+Support:
+
+### Login Roles
+
+* Super Admin
+* Gym Owner
+* Staff
+* Trainer
+* Member
+
+Features:
+
+* Email/password login
+* Forgot password
+* OTP reset
+* Role-based redirect
+* Protected routes
+* JWT authentication
+* Session persistence
+
+---
+
+# Registration Flow
+
+### Gym Registration
+
+Gym owners can register a gym:
+
+Fields:
+
+* Gym Name
+* Owner Name
+* Email
+* Phone
+* GST (optional)
+* Address
+* Logo Upload
+* Subscription Plan
+* Branch Count
+* Currency
+* Time Zone
+
+After registration:
+
+1. Gym created
+2. Owner account created
+3. Free trial activated
+4. Gym dashboard generated automatically
+
+---
+
+# Modules (Based on Attached Flow)
+
+Design should be inspired by the attached dashboard structure and sidebar navigation.
+
+---
+
+## 1. Dashboard
+
+Widgets:
+
+* Total Members
+* Today's Attendance
+* Active Trainers
+* Monthly Revenue
+* Pending Payments
+* Membership Expiry
+* Upcoming Classes
+* Equipment Status
+
+Charts:
+
+* Revenue analytics
+* Membership growth
+* Attendance trend
+* Trainer performance
+
+---
+
+## 2. Member Management
+
+Features:
+
+* Add/Edit/Delete Member
+* Membership plans
+* Freeze membership
+* Renew/upgrade
+* Profile history
+* Body measurements
+* Progress tracking
+* Diet plans
+* QR-based member ID
+* Emergency contacts
+* Medical notes
+
+Member Profile Includes:
+
+```text
+Photo
+Membership
+Workout Plan
+Attendance
+Invoices
+Progress
+Assigned Trainer
+```
+
+---
+
+## 3. Attendance Management
+
+Features:
+
+* Check-in / Check-out
+* QR Scanner
+* RFID-ready support
+* Biometric integration-ready
+* Attendance history
+* Daily reports
+* Late alerts
+
+---
+
+## 4. Workout Management
+
+Features:
+
+* Workout plans
+* Exercise library
+* Progress tracking
+* Assign plans to members
+* Trainer notes
+* Goal tracking
+* BMI calculator
+
+---
+
+## 5. Trainer Management
+
+Features:
+
+* Trainer profiles
+* Schedule management
+* Assign members
+* Attendance
+* Payroll readiness
+* Performance tracking
+
+---
+
+## 6. Billing & Payments
+
+Features:
+
+* Membership fees
+* Invoice generation
+* Printable invoices
+* GST support
+* Payment history
+* Due reminders
+* Auto recurring billing
+* Razorpay/Stripe integration
+
+Payment Modes:
+
+* Cash
+* UPI
+* Card
+* Online
+
+---
+
+## 7. Equipment Management
+
+Features:
+
+* Equipment inventory
+* Maintenance scheduling
+* Service history
+* Status tracking
+* Damage reports
+
+---
+
+## 8. Class Management
+
+Features:
+
+* Create classes
+* Capacity management
+* Trainer assignment
+* Scheduling
+* Attendance tracking
+
+Examples:
+
+* Zumba
+* Yoga
+* HIIT
+* Cardio
+
+---
+
+## 9. Communication Management
+
+Features:
+
+* SMS reminders
+* Email notifications
+* WhatsApp-ready integration
+* Push notifications
+* Bulk announcements
+
+Use Cases:
+
+* Membership expiry
+* Payment reminders
+* Class updates
+
+---
+
+## 10. Reports & Analytics
+
+Reports:
+
+* Revenue report
+* Attendance report
+* Membership report
+* Trainer performance
+* Equipment usage
+* Monthly analytics
+
+Export:
+
+* PDF
+* Excel
+* CSV
+
+---
+
+## 11. Settings & Configuration
+
+Gym Settings:
+
+* Branding
+* Logo
+* Theme
+* Tax settings
+* Currency
+* Branch settings
+* Staff permissions
+
+---
+
+## 12. Notifications & Alerts
+
+System alerts:
+
+* Membership expiry
+* Payment dues
+* Equipment maintenance
+* Trainer schedule
+* Class reminders
+
+---
+
+# Sidebar Navigation
+
+Create collapsible sidebar similar to the reference image:
+
+```text
+Dashboard
+Members
+Attendance
+Workouts
+Trainers
+Billing & Payments
+Equipment
+Classes
+Reports
+Communication
+Settings
+```
+
+Features:
+
+* Hamburger menu
+* Responsive sidebar
+* Smooth animations
+* Active nav highlighting
+* Dark/Light mode
+* Profile dropdown
+
+---
+
+# UI/UX Requirements
+
+Design style:
+
+* Premium SaaS dashboard
+* Modern glassmorphism
+* Clean spacing
+* Gradient cards
+* Mobile responsive
+* Dark mode support
+* Professional admin panel
+
+Theme:
+
+```text
+Primary: Blue gradient
+Secondary: White/Gray
+Accent: Indigo
+```
+
+Add:
+
+* Smooth transitions
+* Loading skeletons
+* Toast notifications
+* Empty states
+* Search/filter everywhere
+* Pagination
+* Export buttons
+
+---
+
+# Database Schema (Supabase)
+
+Core Tables:
+
+```sql
+gyms
+users
+roles
+members
+trainers
+attendance
+workout_plans
+payments
+invoices
+equipment
+classes
+notifications
+subscriptions
+reports
+```
+
+Use:
+
+### Row Level Security (RLS)
+
+for tenant isolation.
+
+---
+
+# Required Features
+
+Must include:
+
+✅ Multi-gym SaaS architecture
+✅ Super Admin Panel
+✅ Gym Owner Dashboard
+✅ Role-based access
+✅ QR attendance
+✅ Invoice printing
+✅ Dark mode
+✅ Analytics dashboard
+✅ Mobile responsive UI
+✅ Real-time notifications
+✅ Secure authentication
+✅ Supabase backend
+✅ Free-tier optimized architecture
+
+---
+
+## Folder Structure
+
+```text
+src/
+ ├── components/
+ ├── pages/
+ ├── layouts/
+ ├── hooks/
+ ├── store/
+ ├── services/
+ ├── routes/
+ ├── utils/
+ ├── lib/
+ ├── features/
+ ├── context/
+ ├── assets/
+```
+
+---
+
+### Bonus Features
+
+* Multi-branch gym support
+* AI workout recommendation
+* Diet planner
+* WhatsApp automation
+* Mobile app ready APIs
+* White-label support
+* Subscription billing SaaS model
+
+This should feel like **a commercial SaaS product similar to Mindbody, Zen Planner, or Gymdesk**, while matching the workflow shown in the attached dashboard image.

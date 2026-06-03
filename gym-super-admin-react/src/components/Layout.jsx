@@ -15,7 +15,7 @@ export default function Layout({ children }) {
       <div className="lg:ml-[280px]">
         <Navbar setSidebarOpen={setSidebarOpen} />
 
-        <main className="p-6">
+        <main className="p-6 min-h-[calc(100vh-80px)] bg-slate-100 dark:bg-slate-950">
           {children}
         </main>
       </div>

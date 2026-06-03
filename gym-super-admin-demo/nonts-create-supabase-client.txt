@@ -1,0 +1,1845 @@
+Perfect. Now we’ll connect a **real backend using Supabase (free)** and make your Gym SaaS **multi-tenant**.
+
+## Step 1: Create Supabase Project
+
+Go to:
+
+[Supabase](https://supabase.com?utm_source=chatgpt.com)
+
+1. Create account
+2. Click **New Project**
+3. Project Name:
+
+```txt
+gym-saas-platform
+```
+
+4. Set database password
+5. Region → choose nearest
+6. Create project
+
+---
+
+## Step 2: Install Supabase
+
+Run inside project:
+
+```bash
+npm install @supabase/supabase-js
+```
+
+---
+
+## Step 3: Create Environment Variables
+
+Create:
+
+### `.env`
+
+```env
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+Get these from:
+
+**Supabase → Settings → API**
+
+---
+
+## Step 4: Create Supabase Client
+
+Create:
+
+### `src/lib/supabase.js`
+
+```js
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL;
+
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase =
+  createClient(
+    supabaseUrl,
+    supabaseAnonKey
+  );
+```
+
+---
+
+## Step 5: Create Database Tables
+
+Open:
+
+**Supabase → SQL Editor**
+
+Run this:
+
+### Gyms Table
+
+```sql
+create table gyms (
+  id uuid primary key default gen_random_uuid(),
+
+  gym_name text not null,
+  owner_name text not null,
+  email text unique not null,
+  phone text,
+  address text,
+  city text,
+  state text,
+  country text,
+  gst_number text,
+
+  logo_url text,
+
+  subscription_plan text default 'basic',
+
+  branches integer default 1,
+
+  timezone text default 'Asia/Kolkata',
+
+  currency text default 'INR',
+
+  status text default 'pending',
+
+  created_at timestamp
+  default now()
+);
+```
+
+---
+
+### Users Table
+
+```sql
+create table users (
+  id uuid primary key
+  references auth.users(id),
+
+  gym_id uuid
+  references gyms(id),
+
+  full_name text,
+
+  email text unique,
+
+  role text not null,
+
+  created_at timestamp
+  default now()
+);
+```
+
+---
+
+### Subscriptions Table
+
+```sql
+create table subscriptions (
+  id uuid primary key
+  default gen_random_uuid(),
+
+  gym_id uuid
+  references gyms(id),
+
+  plan_name text,
+
+  amount decimal,
+
+  start_date date,
+
+  end_date date,
+
+  status text
+);
+```
+
+---
+
+### Members Table
+
+```sql
+create table members (
+  id uuid primary key
+  default gen_random_uuid(),
+
+  gym_id uuid
+  references gyms(id),
+
+  full_name text,
+
+  phone text,
+
+  email text,
+
+  membership_type text,
+
+  joining_date date,
+
+  expiry_date date,
+
+  created_at timestamp
+  default now()
+);
+```
+
+---
+
+## Step 6: Multi-Tenant Rule
+
+Every table contains:
+
+```txt
+gym_id
+```
+
+That isolates each gym’s data.
+
+Example:
+
+Gym A can only see:
+
+```sql
+WHERE gym_id = current_gym_id
+```
+
+Gym B never sees Gym A data.
+
+This is how real SaaS platforms work.
+
+---
+
+## Step 7: Enable Authentication
+
+Go:
+
+**Authentication → Providers → Email**
+
+Enable:
+
+✅ Email Login
+
+Disable signup for public if only Super Admin creates gyms.
+
+---
+
+## Step 8: Create Login Page
+
+Next we’ll build:
+
+✅ Login UI
+✅ Supabase auth
+✅ Protected routes
+✅ Role-based login
+✅ Super Admin access
+✅ Gym Owner access
+✅ Session persistence
+
+After this, your app becomes a **real working SaaS product**, not just UI.
+
+
+**************************************
+
+Create the **`.env` file in the project root**, same level as `package.json` and `vite.config.js`.
+
+Your structure should look like this:
+
+```txt id="v4h5mt"
+gym-super-admin
+│── node_modules
+│── public
+│── src
+│── .env              ← create here
+│── package.json
+│── vite.config.js
+│── tailwind.config.js
+```
+
+### In VS Code / Codespaces:
+
+1. Right-click project root (**gym-super-admin**)
+2. **New File**
+3. Name it:
+
+```txt id="zb7wxu"
+.env
+```
+
+4. Paste this:
+
+```env id="j5dz2h"
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+---
+
+### Where to get values
+
+In **Supabase Dashboard**:
+
+**Project → Settings → API**
+
+Copy:
+
+**Project URL**
+
+Paste into:
+
+```env id="f82h4h"
+VITE_SUPABASE_URL=
+```
+
+Copy:
+
+**anon public key**
+
+Paste into:
+
+```env id="n44tx1"
+VITE_SUPABASE_ANON_KEY=
+```
+
+Example:
+
+```env id="vzt1lb"
+VITE_SUPABASE_URL=https://abcxyz.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
+```
+
+---
+
+### Important (Vite requirement)
+
+The variable **must start with `VITE_`** or it won’t work.
+
+Correct:
+
+```env id="fjg65g"
+VITE_SUPABASE_URL
+```
+
+Wrong:
+
+```env id="3u0h3u"
+SUPABASE_URL
+```
+
+---
+
+### After creating `.env`
+
+Restart Vite:
+
+```bash id="4yecj0"
+Ctrl + C
+npm run dev
+```
+
+Otherwise env variables won’t load.
+
+
+********************************************* DATA BASE AND TABLES ***********************
+
+Yes — that’s exactly the correct place.
+
+Your screenshot shows:
+
+✅ **SQL Editor**
+✅ Query executed successfully
+✅ `gyms` table created (`Success. No rows returned`)
+
+Now run the remaining tables **one by one** in the same SQL editor.
+
+### 1. Users Table
+
+Paste and run:
+
+```sql
+create table users (
+  id uuid primary key
+  references auth.users(id),
+
+  gym_id uuid
+  references gyms(id),
+
+  full_name text,
+
+  email text unique,
+
+  role text not null,
+
+  created_at timestamp
+  default now()
+);
+```
+
+Click **Run**.
+
+---
+
+### 2. Subscriptions Table
+
+Paste and run:
+
+```sql
+create table subscriptions (
+  id uuid primary key
+  default gen_random_uuid(),
+
+  gym_id uuid
+  references gyms(id),
+
+  plan_name text,
+
+  amount decimal,
+
+  start_date date,
+
+  end_date date,
+
+  status text
+);
+```
+
+Click **Run**.
+
+---
+
+### 3. Members Table
+
+Paste and run:
+
+```sql
+create table members (
+  id uuid primary key
+  default gen_random_uuid(),
+
+  gym_id uuid
+  references gyms(id),
+
+  full_name text,
+
+  phone text,
+
+  email text,
+
+  membership_type text,
+
+  joining_date date,
+
+  expiry_date date,
+
+  created_at timestamp
+  default now()
+);
+```
+
+Click **Run**.
+
+---
+
+After all run successfully:
+
+Go to:
+
+```txt
+Database → Tables
+```
+
+You should see:
+
+```txt
+gyms
+users
+subscriptions
+members
+```
+
+Once done, we’ll connect your React app to Supabase and make **real gym registration work from UI**.
+
+
+************************************* CONNECT TO FRONTEND ***************************************
+
+Perfect — database setup is complete. I can see all 4 tables were created successfully:
+
+✅ `gyms`
+✅ `members`
+✅ `subscriptions`
+✅ `users`
+
+Now let’s connect **React → Supabase** and make your first **real working feature: Gym Registration**.
+
+## Step 1: Create Supabase client
+
+Create file:
+
+### `src/lib/supabase.js`
+
+```js
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL;
+
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase =
+  createClient(
+    supabaseUrl,
+    supabaseAnonKey
+  );
+```
+
+---
+
+## Step 2: Install Toast Notifications
+
+Run:
+
+```bash
+npm install react-hot-toast
+```
+
+---
+
+## Step 3: Add Toaster
+
+Open **`main.jsx`**
+
+Add:
+
+```jsx
+import { Toaster } from "react-hot-toast";
+```
+
+Then inside `<React.StrictMode>`:
+
+```jsx
+<Toaster position="top-right" />
+```
+
+Example:
+
+```jsx
+<React.StrictMode>
+  <App />
+  <Toaster position="top-right" />
+</React.StrictMode>
+```
+
+---
+
+## Step 4: Create Gym Registration Page
+
+Create:
+
+### `src/pages/GymsManagement.jsx`
+
+Paste this:
+
+```jsx
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { supabase } from "../lib/supabase";
+
+export default function GymsManagement() {
+  const [loading, setLoading] =
+    useState(false);
+
+  const [formData, setFormData] =
+    useState({
+      gym_name: "",
+      owner_name: "",
+      email: "",
+      phone: "",
+      city: "",
+      state: "",
+      country: "",
+      subscription_plan: "basic",
+      branches: 1,
+      status: "pending",
+    });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]:
+        e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const { error } =
+      await supabase
+        .from("gyms")
+        .insert([formData]);
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(
+        "Gym Registered Successfully"
+      );
+
+      setFormData({
+        gym_name: "",
+        owner_name: "",
+        email: "",
+        phone: "",
+        city: "",
+        state: "",
+        country: "",
+        subscription_plan:
+          "basic",
+        branches: 1,
+        status: "pending",
+      });
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-white dark:bg-slate-900 rounded-[30px] p-8 shadow-lg">
+        <h1 className="text-3xl font-bold mb-8">
+          Register Gym
+        </h1>
+
+        <form
+          onSubmit={handleSubmit}
+          className="grid md:grid-cols-2 gap-5"
+        >
+          <input
+            type="text"
+            name="gym_name"
+            placeholder="Gym Name"
+            value={formData.gym_name}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+            required
+          />
+
+          <input
+            type="text"
+            name="owner_name"
+            placeholder="Owner Name"
+            value={formData.owner_name}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+            required
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+            required
+          />
+
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+          />
+
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={formData.city}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+          />
+
+          <input
+            type="text"
+            name="state"
+            placeholder="State"
+            value={formData.state}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+          />
+
+          <input
+            type="text"
+            name="country"
+            placeholder="Country"
+            value={formData.country}
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+          />
+
+          <select
+            name="subscription_plan"
+            value={
+              formData.subscription_plan
+            }
+            onChange={handleChange}
+            className="p-4 rounded-2xl border"
+          >
+            <option value="basic">
+              Basic
+            </option>
+            <option value="standard">
+              Standard
+            </option>
+            <option value="premium">
+              Premium
+            </option>
+          </select>
+
+          <button
+            disabled={loading}
+            className="col-span-full bg-blue-600 text-white py-4 rounded-2xl font-semibold hover:bg-blue-700 transition"
+          >
+            {loading
+              ? "Registering..."
+              : "Register Gym"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+```
+
+Then run:
+
+```bash
+npm run dev
+```
+
+Go to:
+
+```txt
+Gyms Management
+```
+
+Try registering a gym.
+
+If successful, the gym will appear in your Supabase **`gyms` table** automatically — your app becomes a real SaaS system.
+
+
+*************************** CREATE POLICY *****************************************
+
+Good — this means Supabase is connected correctly. The issue is **RLS (Row Level Security)** is enabled and blocking inserts.
+
+You need to create a policy for the `gyms` table.
+
+Go to:
+
+```txt
+Supabase → SQL Editor
+```
+
+Run this SQL:
+
+```sql
+alter table gyms
+enable row level security;
+
+create policy "Allow insert for everyone"
+on gyms
+for insert
+to anon
+with check (true);
+
+create policy "Allow select for everyone"
+on gyms
+for select
+to anon
+using (true);
+
+create policy "Allow update for everyone"
+on gyms
+for update
+to anon
+using (true);
+
+create policy "Allow delete for everyone"
+on gyms
+for delete
+to anon
+using (true);
+```
+
+Click **Run**.
+
+### What this does
+
+* Allows your React app to **insert gyms**
+* Allows **reading gyms**
+* Allows **updating/deleting**
+* Fixes:
+
+```txt
+new row violates row-level security policy
+```
+
+Then try **Register Gym** again.
+
+It should now save directly into the `gyms` table.
+
+### Better long-term SaaS setup
+
+Later we’ll tighten security so:
+
+* **Super Admin** → can access all gyms
+* **Gym Owner** → only their gym (`gym_id`)
+* **Members/Trainers** → limited access
+
+For now we keep it open so development moves faster.
+
+
+*********************************** INSERT DATABASE ************************
+
+Excellent — now your app is doing **real database inserts** 🎉
+
+You officially have:
+
+✅ React frontend
+✅ Supabase backend
+✅ Real database
+✅ Gym registration form
+✅ Data saving to cloud DB
+✅ Multi-tenant structure started
+
+Next important step: **Show registered gyms in UI (real data table)**.
+
+Update **`GymsManagement.jsx`** so Super Admin can:
+
+✅ View all gyms
+✅ See live database data
+✅ Approve/Suspend gyms
+✅ Delete gyms
+✅ Search gyms
+
+Add this below your imports:
+
+```jsx id="z9mbux"
+import { useEffect } from "react";
+```
+
+Add state:
+
+```jsx id="r9b3zq"
+const [gyms, setGyms] =
+  useState([]);
+```
+
+---
+
+Add this function inside component:
+
+```jsx id="kj35dg"
+const fetchGyms = async () => {
+  const { data, error } =
+    await supabase
+      .from("gyms")
+      .select("*")
+      .order("created_at", {
+        ascending: false,
+      });
+
+  if (!error) {
+    setGyms(data);
+  }
+};
+```
+
+---
+
+Add `useEffect`:
+
+```jsx id="zhl0f2"
+useEffect(() => {
+  fetchGyms();
+}, []);
+```
+
+---
+
+After successful registration, add:
+
+```jsx id="e9z8qv"
+fetchGyms();
+```
+
+inside success block.
+
+---
+
+Then below the form card add this:
+
+```jsx id="4w7zfx"
+<div className="bg-white dark:bg-slate-900 rounded-[30px] p-8 shadow-lg mt-8">
+  <h2 className="text-2xl font-bold mb-6">
+    Registered Gyms
+  </h2>
+
+  <div className="overflow-x-auto">
+    <table className="w-full">
+      <thead>
+        <tr className="border-b">
+          <th className="text-left py-4">
+            Gym
+          </th>
+
+          <th className="text-left py-4">
+            Owner
+          </th>
+
+          <th className="text-left py-4">
+            Email
+          </th>
+
+          <th className="text-left py-4">
+            Plan
+          </th>
+
+          <th className="text-left py-4">
+            Status
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {gyms.map((gym) => (
+          <tr
+            key={gym.id}
+            className="border-b hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+          >
+            <td className="py-4 font-medium">
+              {gym.gym_name}
+            </td>
+
+            <td className="py-4">
+              {gym.owner_name}
+            </td>
+
+            <td className="py-4">
+              {gym.email}
+            </td>
+
+            <td className="py-4 capitalize">
+              {gym.subscription_plan}
+            </td>
+
+            <td className="py-4">
+              <span className="px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-700">
+                {gym.status}
+              </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+```
+
+Now when you register a gym:
+
+➡ It saves to Supabase
+➡ Auto refreshes UI
+➡ Shows all gyms in dashboard
+
+This is the point where your SaaS starts feeling **real** instead of a static admin UI.
+
+
+************************************* CURD OPERATION **********************************
+
+Perfect — now you have **real CRUD data flow** working.
+
+Current status:
+
+✅ Gym registration works
+✅ Supabase connected
+✅ Database insert working
+✅ Fetching gyms working
+✅ Live table rendering
+✅ Multi-tenant DB structure started
+
+Next best upgrade: **Approve / Suspend / Delete gym actions** (real admin controls).
+
+Inside `GymsManagement.jsx`, add these functions.
+
+### Update Gym Status
+
+```jsx id="z2l0av"
+const updateGymStatus = async (
+  id,
+  status
+) => {
+  const { error } =
+    await supabase
+      .from("gyms")
+      .update({ status })
+      .eq("id", id);
+
+  if (!error) {
+    toast.success(
+      `Gym ${status}`
+    );
+
+    fetchGyms();
+  }
+};
+```
+
+---
+
+### Delete Gym
+
+```jsx id="vkwq2u"
+const deleteGym = async (id) => {
+  const confirmed =
+    window.confirm(
+      "Delete this gym?"
+    );
+
+  if (!confirmed) return;
+
+  const { error } =
+    await supabase
+      .from("gyms")
+      .delete()
+      .eq("id", id);
+
+  if (!error) {
+    toast.success(
+      "Gym deleted"
+    );
+
+    fetchGyms();
+  }
+};
+```
+
+---
+
+Now add **Actions column**.
+
+Inside table header:
+
+```jsx id="8f6mkk"
+<th className="text-left py-4">
+  Actions
+</th>
+```
+
+---
+
+Then inside `<tr>` add:
+
+```jsx id="fgrslm"
+<td className="py-4">
+  <div className="flex gap-2 flex-wrap">
+    <button
+      onClick={() =>
+        updateGymStatus(
+          gym.id,
+          "active"
+        )
+      }
+      className="bg-green-600 text-white px-3 py-1 rounded-xl text-sm"
+    >
+      Approve
+    </button>
+
+    <button
+      onClick={() =>
+        updateGymStatus(
+          gym.id,
+          "suspended"
+        )
+      }
+      className="bg-yellow-500 text-white px-3 py-1 rounded-xl text-sm"
+    >
+      Suspend
+    </button>
+
+    <button
+      onClick={() =>
+        deleteGym(gym.id)
+      }
+      className="bg-red-600 text-white px-3 py-1 rounded-xl text-sm"
+    >
+      Delete
+    </button>
+  </div>
+</td>
+```
+
+Now your **Super Admin panel becomes functional**:
+
+### Real Features
+
+✅ Register Gym
+✅ Fetch Gyms
+✅ Approve Gym
+✅ Suspend Gym
+✅ Delete Gym
+✅ Live DB updates
+
+This is essentially the foundation of a production **Gym SaaS Admin Platform**.
+
+
+****************************    working SaaS admin system with a real backend  ********************
+
+Awesome — this is a major milestone.
+
+You now have a **working SaaS admin system with a real backend**:
+
+✅ React + Vite frontend
+✅ Supabase cloud backend
+✅ Real database persistence
+✅ Gym registration
+✅ Live fetch table
+✅ Approve / Suspend / Delete actions
+✅ Auto UI refresh
+✅ Multi-tenant structure (`gym_id`) ready
+
+At this stage, the **highest-value next feature** is:
+
+## Authentication + Role Based Access
+
+So the system becomes:
+
+### Super Admin
+
+* Access all gyms
+* Approve/suspend gyms
+* View global analytics
+
+### Gym Owner
+
+* Login only to their gym
+* Manage members
+* Trainers
+* Billing
+* Attendance
+* Workouts
+
+### Trainer
+
+* Workout plans
+* Assigned members
+
+### Receptionist
+
+* Billing
+* Check-ins
+* Attendance
+
+### Member
+
+* Personal dashboard
+* Workout plan
+* Attendance
+* Membership
+
+Architecture:
+
+```txt id="n3u7s0"
+Super Admin
+   ├── Gym A
+   │    ├── Members
+   │    ├── Trainers
+   │    └── Billing
+   │
+   ├── Gym B
+   └── Gym C
+```
+
+Next implementation plan:
+
+### Phase 1 (1–2 hrs)
+
+✅ Supabase Auth
+✅ Login page
+✅ Protected routes
+✅ Session persistence
+✅ Logout
+✅ Role-based redirects
+
+### Phase 2
+
+✅ Gym Owner dashboard
+✅ Add members
+✅ Attendance system
+✅ Membership plans
+✅ Billing & invoice
+
+### Phase 3
+
+✅ Member portal
+✅ QR check-in
+✅ Subscription renewal
+✅ Notifications
+
+Since your CRUD is working, **Auth + Protected Routes** is the logical next step.
+
+
+
+***************************** Login + Role-Based Access + Protected Routes *************************
+
+Perfect. Now we’ll make your app a **real SaaS with Login + Role-Based Access + Protected Routes**.
+
+## Step 1: Enable Email Auth in Supabase
+
+Go:
+
+```txt
+Supabase → Authentication → Providers
+```
+
+Enable:
+
+```txt
+Email
+```
+
+Turn ON:
+
+```txt
+Enable Email Provider
+```
+
+Save.
+
+---
+
+## Step 2: Create Auth Context
+
+Create:
+
+### `src/context/AuthContext.jsx`
+
+```jsx
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import { supabase } from "../lib/supabase";
+
+const AuthContext =
+  createContext();
+
+export function AuthProvider({
+  children,
+}) {
+  const [user, setUser] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } =
+        await supabase.auth.getSession();
+
+      setUser(session?.user ?? null);
+
+      setLoading(false);
+    };
+
+    getSession();
+
+    const {
+      data: authListener,
+    } =
+      supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          setUser(
+            session?.user ?? null
+          );
+        }
+      );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () =>
+  useContext(AuthContext);
+```
+
+---
+
+## Step 3: Wrap App
+
+Open:
+
+### `src/main.jsx`
+
+Add import:
+
+```jsx
+import { AuthProvider } from "./context/AuthContext";
+```
+
+Wrap app:
+
+```jsx
+<React.StrictMode>
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+
+  <Toaster position="top-right" />
+</React.StrictMode>
+```
+
+---
+
+## Step 4: Create Login Page
+
+Create:
+
+### `src/pages/Login.jsx`
+
+```jsx
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Navigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../context/AuthContext";
+
+export default function Login() {
+  const { user } = useAuth();
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [formData, setFormData] =
+    useState({
+      email: "",
+      password: "",
+    });
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]:
+        e.target.value,
+    });
+  };
+
+  const handleLogin = async (
+    e
+  ) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const { error } =
+      await supabase.auth.signInWithPassword(
+        {
+          email:
+            formData.email,
+          password:
+            formData.password,
+        }
+      );
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(
+        "Login successful"
+      );
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="bg-white rounded-[32px] p-10 shadow-xl w-full max-w-md">
+        <h1 className="text-4xl font-bold text-center mb-8">
+          Gym SaaS Login
+        </h1>
+
+        <form
+          onSubmit={handleLogin}
+          className="space-y-5"
+        >
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full p-4 rounded-2xl border"
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full p-4 rounded-2xl border"
+          />
+
+          <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-semibold">
+            {loading
+              ? "Signing In..."
+              : "Login"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## Step 5: Create Protected Route
+
+Create:
+
+### `src/components/ProtectedRoute.jsx`
+
+```jsx
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+export default function ProtectedRoute({
+  children,
+}) {
+  const { user, loading } =
+    useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Navigate to="/login" />
+    );
+  }
+
+  return children;
+}
+```
+
+---
+
+## Step 6: Update `App.jsx`
+
+Add imports:
+
+```jsx
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+```
+
+Add route:
+
+```jsx
+<Route
+  path="/login"
+  element={<Login />}
+/>
+```
+
+Wrap all protected pages:
+
+Replace:
+
+```jsx
+<Layout>
+  <Routes>
+```
+
+with:
+
+```jsx
+<Routes>
+  <Route
+    path="/login"
+    element={<Login />}
+  />
+
+  <Route
+    path="*"
+    element={
+      <ProtectedRoute>
+        <Layout>
+          <Routes>
+```
+
+Then close:
+
+```jsx
+          </Routes>
+        </Layout>
+      </ProtectedRoute>
+    }
+  />
+</Routes>
+```
+
+---
+
+## Step 7: Create First Admin User
+
+Go:
+
+```txt
+Supabase → Authentication → Users
+```
+
+Click:
+
+```txt
+Add User
+```
+
+Create:
+
+```txt
+admin@gym.com
+password123
+```
+
+---
+
+Run:
+
+```bash
+npm run dev
+```
+
+Now:
+
+✅ Login screen appears
+✅ Session persists
+✅ Protected routes work
+✅ Unauthorized users blocked
+✅ Real authentication working
+
+This turns your project into an actual SaaS platform foundation.
+
+
+***********************  SUPER ADMIN REGISTRATION ********************
+
+Excellent. You now have:
+
+✅ Login page
+✅ Supabase Auth
+✅ Protected routes
+✅ Session persistence
+✅ Real authentication
+
+Now the next critical step is **Role-Based Access + Logout + Super Admin-only routes**.
+
+## Step 1: Add Role Column to Auth Users
+
+We already have a `users` table.
+
+Go to **SQL Editor** and run:
+
+```sql
+insert into users (
+  id,
+  full_name,
+  email,
+  role
+)
+select
+  id,
+  'Super Admin',
+  email,
+  'super_admin'
+from auth.users
+where email = 'admin@gym.com'
+on conflict (email) do nothing;
+```
+
+This creates your **Super Admin profile**.
+
+---
+
+## Step 2: Update AuthContext
+
+Open:
+
+### `src/context/AuthContext.jsx`
+
+Replace with:
+
+```jsx
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import { supabase } from "../lib/supabase";
+
+const AuthContext =
+  createContext();
+
+export function AuthProvider({
+  children,
+}) {
+  const [user, setUser] =
+    useState(null);
+
+  const [profile, setProfile] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } =
+        await supabase.auth.getSession();
+
+      const currentUser =
+        session?.user ?? null;
+
+      setUser(currentUser);
+
+      if (currentUser) {
+        fetchProfile(
+          currentUser.id
+        );
+      }
+
+      setLoading(false);
+    };
+
+    getSession();
+
+    const {
+      data: authListener,
+    } =
+      supabase.auth.onAuthStateChange(
+        async (
+          _event,
+          session
+        ) => {
+          const currentUser =
+            session?.user ?? null;
+
+          setUser(currentUser);
+
+          if (currentUser) {
+            await fetchProfile(
+              currentUser.id
+            );
+          }
+        }
+      );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const fetchProfile =
+    async (userId) => {
+      const { data } =
+        await supabase
+          .from("users")
+          .select("*")
+          .eq("id", userId)
+          .single();
+
+      setProfile(data);
+    };
+
+  const logout =
+    async () => {
+      await supabase.auth.signOut();
+    };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        logout,
+        loading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () =>
+  useContext(AuthContext);
+```
+
+---
+
+## Step 3: Add Logout Button
+
+Open:
+
+### `Navbar.jsx`
+
+Add import:
+
+```jsx
+import { useAuth } from "../context/AuthContext";
+```
+
+Inside component:
+
+```jsx
+const {
+  logout,
+  profile,
+} = useAuth();
+```
+
+Find profile section and replace with:
+
+```jsx
+<div className="relative group">
+  <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 rounded-2xl px-3 py-2 hover:shadow-md transition-all cursor-pointer">
+    <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+      {profile?.full_name?.[0] ||
+        "A"}
+    </div>
+
+    <div>
+      <h4 className="font-semibold text-sm">
+        {profile?.full_name ||
+          "Admin"}
+      </h4>
+
+      <p className="text-xs text-slate-500 capitalize">
+        {profile?.role?.replace(
+          "_",
+          " "
+        ) || "Super Admin"}
+      </p>
+    </div>
+  </div>
+
+  <div className="absolute right-0 top-14 bg-white dark:bg-slate-900 shadow-xl rounded-2xl p-2 hidden group-hover:block min-w-[180px]">
+    <button
+      onClick={logout}
+      className="w-full text-left px-4 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
+    >
+      Logout
+    </button>
+  </div>
+</div>
+```
+
+---
+
+## Step 4: Super Admin Route Protection
+
+Update:
+
+### `ProtectedRoute.jsx`
+
+Replace with:
+
+```jsx
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+export default function ProtectedRoute({
+  children,
+}) {
+  const {
+    user,
+    profile,
+    loading,
+  } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Navigate to="/login" />
+    );
+  }
+
+  if (
+    profile?.role !==
+    "super_admin"
+  ) {
+    return (
+      <Navigate to="/login" />
+    );
+  }
+
+  return children;
+}
+```
+
+Now:
+
+✅ Only Super Admin can access dashboard
+✅ Logout works
+✅ User profile shows in navbar
+✅ Session persists
+✅ Role system foundation complete
+
+Next step after this: **Gym Owner login + Auto gym creation account** (real multi-tenant SaaS behavior).

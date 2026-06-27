@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { getApiUrl } from "../lib/api";
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -82,10 +83,18 @@ export const registerGym = async (
     }
 
     // 4. Send login email
+    const url = getApiUrl("/send-email");
+
     try {
+      console.log(
+        "Register email request url:",
+        url,
+        "host:",
+        window.location.hostname
+      );
       const response =
         await fetch(
-          "http://localhost:5000/send-email",
+          url,
           {
             method: "POST",
 
@@ -109,6 +118,23 @@ export const registerGym = async (
       const result =
         await response.json();
 
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            result.message ||
+            JSON.stringify(result) ||
+            "Unable to send email"
+        );
+      }
+
+      if (result.success === false) {
+        throw new Error(
+          result.error ||
+            result.message ||
+            "Unable to send email"
+        );
+      }
+
       console.log(
         "EMAIL RESULT:",
         result
@@ -118,6 +144,7 @@ export const registerGym = async (
         "EMAIL FAILED:",
         error
       );
+      throw error;
     }
 
     return {

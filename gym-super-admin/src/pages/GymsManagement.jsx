@@ -134,7 +134,8 @@ export default function GymsManagement() {
       );
     } else {
       alert(
-        result.error
+        result.error ||
+          "Failed to resend email. Check server logs for details."
       );
     }
   };

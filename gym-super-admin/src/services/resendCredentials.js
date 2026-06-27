@@ -1,9 +1,20 @@
+import { getApiUrl } from "../lib/api";
+
 export const resendCredentials =
   async (gym) => {
     try {
+      const url = getApiUrl("/send-email");
+
+      console.log(
+        "Resend email request url:",
+        url,
+        "host:",
+        window.location.hostname
+      );
+
       const response =
         await fetch(
-          "http://localhost:5000/send-email",
+          url,
           {
             method: "POST",
 
@@ -29,9 +40,26 @@ export const resendCredentials =
       const result =
         await response.json();
 
+      console.log(
+        "RESEND EMAIL RESPONSE:",
+        response.status,
+        result
+      );
+
       if (!response.ok) {
         throw new Error(
-          result.message
+          result.error ||
+            result.message ||
+            JSON.stringify(result) ||
+            "Unable to resend email"
+        );
+      }
+
+      if (result.success === false) {
+        throw new Error(
+          result.error ||
+            result.message ||
+            "Unable to resend email"
         );
       }
 
@@ -39,6 +67,7 @@ export const resendCredentials =
         success: true,
       };
     } catch (err) {
+      console.error("RESEND EMAIL FAILED:", err);
       return {
         success: false,
         error: err.message,

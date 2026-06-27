@@ -1,16 +1,35 @@
-# React + Vite
+# Gym Super Admin
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder contains the React + Vite admin panel for the Gym Management application.
 
-Currently, two official plugins are available:
+## Environment Variables
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Create a `.env` file in the `gym-super-admin` folder and add these values:
 
-## React Compiler
+- `VITE_SUPABASE_URL` – Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` – Supabase anon key
+- `VITE_SUPABASE_SERVICE_ROLE_KEY` – Supabase service role key
+- `VITE_EMAIL_USER` – SMTP email address used for sending credentials
+- `VITE_EMAIL_PASS` – SMTP password for the email account
+- `VITE_API_BASE_URL` – URL for the backend API, e.g. `http://localhost:5000`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Running the app
 
-## Expanding the ESLint configuration
+1. Start the backend server:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+cd gym-super-admin/server
+node index.js
+```
+
+2. Start the frontend app:
+
+```bash
+cd gym-super-admin
+npm run dev
+```
+
+## Email flow
+
+The app sends credential emails through the backend endpoint at `${VITE_API_BASE_URL}/send-email`.
+The backend loads SMTP credentials from `.env` and uses `nodemailer` to send email.

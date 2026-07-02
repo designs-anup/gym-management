@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseAdmin } from "../lib/supabase";
 import { Pencil, Trash2, Search, Mail, } from "lucide-react";
 import { registerGym } from "../services/registerGym";
 import { resendCredentials } from "../services/resendCredentials";
@@ -19,10 +19,21 @@ export default function GymsManagement() {
     useState("");
   const [city, setCity] =
     useState("");
+  const [editingGymId, setEditingGymId] =
+    useState(null);
 
   useEffect(() => {
     fetchGyms();
   }, []);
+
+  const resetForm = () => {
+    setGymName("");
+    setOwnerName("");
+    setEmail("");
+    setPhone("");
+    setCity("");
+    setEditingGymId(null);
+  };
 
   const fetchGyms = async () => {
     try {
@@ -46,6 +57,17 @@ export default function GymsManagement() {
     }
   };
 
+  const handleEditGym = (
+    gym
+  ) => {
+    setEditingGymId(gym.id);
+    setGymName(gym.gym_name || "");
+    setOwnerName(gym.owner_name || "");
+    setEmail(gym.email || "");
+    setPhone(gym.phone || "");
+    setCity(gym.city || "");
+  };
+
   const handleSubmit =
     async () => {
       if (
@@ -59,31 +81,57 @@ export default function GymsManagement() {
         return;
       }
 
-      const result =
-        await registerGym({
-          gym_name: gymName,
-          owner_name:
-            ownerName,
-          email,
-          phone,
-          city,
-        });
+      if (editingGymId) {
+        const { error } =
+          await supabaseAdmin
+            .from("gyms")
+            .update({
+              gym_name: gymName,
+              owner_name:
+                ownerName,
+              email,
+              phone,
+              city,
+            })
+            .eq("id", editingGymId);
 
-      if (result.success) {
+        if (error) {
+          console.error(
+            "UPDATE ERROR:",
+            error
+          );
+          alert(
+            "Failed to update gym"
+          );
+          return;
+        }
+
         alert(
-          "Gym registered successfully"
+          "Gym updated successfully"
         );
-
-        fetchGyms();
-
-        setGymName("");
-        setOwnerName("");
-        setEmail("");
-        setPhone("");
-        setCity("");
       } else {
-        alert(result.error);
+        const result =
+          await registerGym({
+            gym_name: gymName,
+            owner_name:
+              ownerName,
+            email,
+            phone,
+            city,
+          });
+
+        if (result.success) {
+          alert(
+            "Gym registered successfully"
+          );
+        } else {
+          alert(result.error);
+          return;
+        }
       }
+
+      fetchGyms();
+      resetForm();
     };
 
   const deleteGym = async (
@@ -97,7 +145,7 @@ export default function GymsManagement() {
     if (!confirmDelete) return;
 
     const { error } =
-      await supabase
+      await supabaseAdmin
         .from("gyms")
         .delete()
         .eq("id", id);
@@ -159,7 +207,9 @@ export default function GymsManagement() {
       {/* Register Form */}
       <div className="bg-white rounded-2xl shadow-sm border p-5 mb-6">
         <h2 className="text-xl font-bold mb-4">
-          Register New Gym
+          {editingGymId
+            ? "Edit Gym"
+            : "Register New Gym"}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -225,14 +275,27 @@ export default function GymsManagement() {
           />
         </div>
 
-        <button
-          onClick={
-            handleSubmit
-          }
-          className="mt-4 bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700"
-        >
-          Register Gym
-        </button>
+        <div className="mt-4 flex gap-3">
+          <button
+            onClick={
+              handleSubmit
+            }
+            className="bg-blue-600 text-white px-5 py-3 rounded-xl hover:bg-blue-700"
+          >
+            {editingGymId
+              ? "Update Gym"
+              : "Register Gym"}
+          </button>
+
+          {editingGymId && (
+            <button
+              onClick={resetForm}
+              className="border border-gray-300 px-5 py-3 rounded-xl hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Gym Table */}
@@ -344,7 +407,14 @@ export default function GymsManagement() {
                             <Mail className="w-4 h-4 text-green-600" />
                           </button>
 
-                          <button className="p-2 rounded-lg hover:bg-blue-100 transition">
+                          <button
+                            onClick={() =>
+                              handleEditGym(
+                                gym
+                              )
+                            }
+                            className="p-2 rounded-lg hover:bg-blue-100 transition"
+                          >
                             <Pencil className="w-4 h-4 text-blue-600" />
                           </button>
 

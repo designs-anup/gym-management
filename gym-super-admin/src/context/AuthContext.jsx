@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext();
@@ -6,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getSession = async () => {
@@ -20,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // IMPORTANT
+        setLoading(false);
       }
     };
 
@@ -30,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setLoading(false); // IMPORTANT
+      setLoading(false);
     });
 
     return () => {
@@ -38,8 +41,25 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        throw error;
+      }
+
+      setUser(null);
+      toast.success("Logged out successfully");
+      navigate("/login", { replace: true });
+    } catch (err) {
+      console.error(err);
+      toast.error("Unable to log out right now");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );

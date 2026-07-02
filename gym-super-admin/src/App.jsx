@@ -1,8 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -23,8 +19,7 @@ import LogsActivity from "./pages/LogsActivity";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
         {/* Public Route */}
         <Route
           path="/login"
@@ -119,7 +114,6 @@ function App() {
           />
         </Route>
       </Routes>
-    </BrowserRouter>
   );
 }
 
